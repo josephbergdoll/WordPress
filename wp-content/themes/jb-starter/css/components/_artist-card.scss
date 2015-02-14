@@ -1,0 +1,48 @@
+.artist-card {
+  .images {
+    position: relative;
+    width: 100%;
+    padding-bottom: $artist-card-image-padding;
+    background: $light-white;
+  }
+  .image-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    opacity: 0;
+    transition: opacity $hover-in ease-out;
+    &.thumb-active {
+      opacity: 1;
+    }
+  }
+  .artist-name {
+    line-height: $line-small;
+    transition: color $hover-out ease-out;
+  }
+  .info-sub {
+    color: $text-light-grey;
+  }
+  &:hover {
+    .artist-name {
+      color: $black;
+      transition: color $hover-out ease-out $page-transition;
+    }
+    .hover-stroke {
+      @extend %hover-stroke-hover;
+    }
+  }
+
+  &.more-portfolios {
+    &:hover {
+      img {
+        opacity: 0;
+        transition: opacity $hover-in ease-out;
+      }
+    }
+  }
+}

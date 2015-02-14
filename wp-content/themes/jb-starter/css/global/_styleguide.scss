@@ -1,0 +1,288 @@
+// Global Styleguide
+
+a {
+  color: $light-black;
+  transition: color $hover-out ease-out;
+  &:hover {
+    color: $black;
+    transition: color $hover-in ease-out;
+  }
+}
+
+%sg-h1 {
+  font-size: $type-big;
+  line-height: $line-small;
+  font-weight: $type-bold;
+  // text-transform: uppercase;
+  // letter-spacing: $wide-tracking;
+  @extend %aa-text;
+}
+
+%sg-h2 {
+  font-size: $type-big;
+  line-height: $line-small;
+  font-weight: $type-book;
+  // text-transform: uppercase;
+  // letter-spacing: $wide-tracking;
+  @extend %aa-text;
+}
+
+%sg-h3 {
+  font-size: $type-small;
+  line-height: $line-medium;
+  font-weight: $type-book;
+  // text-transform: uppercase;
+  // letter-spacing: $close-tracking;
+  @extend %aa-text;
+}
+
+%sg-h4 {
+  font-size: $type-small;
+  line-height: $line-medium;
+  font-weight: $type-book;
+  // letter-spacing: $mid-tracking;
+  @extend %aa-text;
+}
+
+%sg-body-copy {
+  // font-family: $paragraph;
+  font-size: $type-small;
+  line-height: $line-paragraph;
+  font-weight: $type-book;
+  color: $text-grey-paragraph;
+  // @extend %aa-text;
+}
+
+%sg-body-link {
+}
+
+// body-link is for links used within copy blocks. text-link is used for non-button links all alone in the design.
+
+%sg-text-link {
+}
+
+%sg-blockquote {
+}
+
+%sg-button {
+  text-decoration: none;
+  @include appearance(none);
+  font-family: $sans;
+  font-weight: $type-bold;
+  font-size: $type-button;
+  line-height: $line-small;
+  text-transform: uppercase;
+  color: $dark-grey;
+  display: inline-block;
+  transition: color $hover-out ease-out, border $hover-out ease-out;
+  &:hover {
+    color: $text-dark-grey;
+    transition: color $hover-in ease-out, border $hover-in ease-out;
+  }
+  &.button-active {
+    font-weight: $type-bold;
+    @extend %no-aa-text;
+    color: $black;
+  }
+  &:active {
+    @extend .button-active;
+  }
+}
+
+h1,h2,h3,h4,h5 {
+
+}
+
+h1, .h1 {
+  @extend %sg-h1 !optional;
+}
+
+h2, .h2 {
+  @extend %sg-h2 !optional;
+}
+
+h3, .h3 {
+  @extend %sg-h3 !optional;
+}
+
+h4, .h4 {
+  @extend %sg-h4 !optional;
+}
+
+h5, .h5 {
+  @extend %sg-h5 !optional;
+}
+
+h6, .h6 {
+  @extend %sg-h6 !optional;
+}
+
+p {
+  @extend %sg-body-copy !optional;
+  text-indent: $paragraph-text-indent;
+  &:first-of-type {
+    text-indent: 0;
+  }
+  a {
+    @extend %sg-body-link !optional;
+  }
+}
+
+blockquote {
+  p {
+    @extend %sg-blockquote !optional;
+  }
+}
+
+button {
+ @extend %sg-button !optional;
+}
+
+.button {
+  @extend %sg-button !optional;
+}
+
+.text-link {
+  @extend %sg-text-link !optional;
+}
+
+%hover-stroke-hover {
+  &:after {
+    width: 100%;
+    left: 0;
+    border-bottom: $border-black;
+    transition: all $hover-in ease-out;
+  }
+}
+
+.hover-stroke {
+  display: table;
+  position: relative;
+  &:after {
+    content:'';
+    display: block;
+    position: absolute;
+    width: 0px;
+    height: 1px;
+    border-bottom: $border-black;
+    bottom: -($vertical-bumper-quarter * 0.5);
+    left: 0;
+    transition: all $hover-out ease-out;
+  }
+  &:hover {
+    @extend %hover-stroke-hover;
+  }
+}
+
+.count {
+  color: $text-lighter-grey;
+  font-weight: $type-book;
+  transition: color $hover-out ease-out;
+}
+
+.nav-link {
+  transition: color $hover-out ease-out;
+  .count {
+    margin-left: 0.1rem;
+  }
+  &:hover {
+    color: $light-black;
+    transition: color $hover-in ease-out;
+    .count {
+      color: $text-dark-grey;
+      transition: color $hover-in ease-out;
+    }
+  }
+}
+
+.inline-list {
+  li {
+    display: inline;
+  }
+}
+
+.inline-heading {
+  display: inline-block;
+  margin-right: 0.25rem;
+}
+
+.light-grey {
+  color: $text-light-grey;
+  a {
+    color: $text-light-grey;
+    &:hover {
+      color: $black;
+    }
+  }
+}
+
+.lighter-grey {
+  color: $text-lighter-grey;
+  a {
+    color: $text-lighter-grey;
+    &:hover {
+      color: $mid-black;
+    }
+  }
+}
+
+.line-small {
+  line-height: $line-small !important;
+}
+
+.line-medium {
+  line-height: $line-medium !important;
+}
+
+.line-large {
+  line-height: $line-large !important;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  border-bottom: $standard-border-solid;
+  display: block;
+}
+
+
+.sep {
+  display: inline;
+  li:last-child & {
+    display: none;
+  }
+}
+
+.view-active {
+  pointer-events: none !important;
+  svg > path {
+    fill: $black !important;
+  }
+}
+
+%black-hover {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: $black-dark-transparent;
+  opacity: 0;
+  transition: opacity $hover-out ease-out;
+}
+
+%black-hover-psuedo {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: $black-transparent;
+  opacity: 0;
+  transition: opacity $hover-out ease-out;
+}

@@ -1,0 +1,221 @@
+.full-bleed {
+  width: 100%;
+  .wrapper {
+    height: 100%;
+  }
+}
+
+.top-margin {
+  margin-top: $vertical-bumper;
+  &.half {
+    margin-top: $vertical-bumper-half;
+  }
+  &.quarter {
+    margin-top: $vertical-bumper-quarter;
+  }
+}
+
+.bottom-margin {
+  margin-bottom: $vertical-bumper;
+  &.half {
+    margin-bottom: $vertical-bumper-half;
+  }
+  &.quarter {
+    margin-bottom: $vertical-bumper-quarter;
+  }
+}
+
+.margins {
+  margin-top: $vertical-bumper;
+  margin-bottom: $vertical-bumper;
+  &.half {
+    margin-top: $vertical-bumper-half;
+    margin-bottom: $vertical-bumper-half;
+  }
+  &.quarter {
+    margin-top: $vertical-bumper-quarter;
+    margin-bottom: $vertical-bumper-quarter;
+  }
+}
+
+.top-padding {
+  padding-top: $vertical-bumper;
+  &.half {
+    padding-top: $vertical-bumper-half;
+  }
+  &.quarter {
+    padding-top: $vertical-bumper-quarter;
+  }
+}
+
+.bottom-padding {
+  padding-bottom: $vertical-bumper;
+  &.half {
+    padding-bottom: $vertical-bumper-half;
+  }
+  &.quarter {
+    padding-bottom: $vertical-bumper-quarter;
+  }
+}
+
+.paddings {
+  padding-top: $vertical-bumper;
+  padding-bottom: $vertical-bumper;
+  &.half {
+    padding-top: $vertical-bumper-half;
+    padding-bottom: $vertical-bumper-half;
+  }
+  &.quarter {
+    padding-top: $vertical-bumper-quarter;
+    padding-bottom: $vertical-bumper-quarter;
+  }
+}
+
+.with-stroke {
+  position: relative;
+  span:not(.num) {
+    display: table;
+    position: relative;
+    z-index: 1;
+    padding-right: 1rem;
+    background: $white;
+  }
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    border-top: $standard-border;
+  }
+  &.centered {
+    span:not(.num) {
+      margin: 0 auto;
+      padding-left: 1rem;
+    }
+  }
+}
+
+
+
+.neg-small {
+  margin-right: -$wrapper-padding-small;
+  margin-left: -$wrapper-padding-small;
+  @include media($medium-up) {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+.vertical-align-wrap {
+  display: table !important;
+  width: 100%;
+  height: 100%;
+  .vertical-align {
+    display: table-cell !important;
+    vertical-align: middle !important;
+    float: none !important;
+  }
+}
+
+.vertical-align-wrap-large {
+  @include media($medium-up) {
+    display: table !important;
+    width: 100%;
+    height: 100%;
+  }
+  .vertical-align {
+    @include media($medium-up) {
+      display: table-cell !important;
+      vertical-align: middle !important;
+      float: none !important;
+    }
+  }
+}
+
+.pad-to-medium {
+  padding: 1rem;
+  @include media($medium-up) {
+    padding: 0;
+  }
+}
+
+.pad-to-large {
+  padding: 1rem;
+  @include media($large-up) {
+    padding: 0;
+  }
+}
+
+.clearfix {
+  @include clearfix;
+}
+
+.link-card {
+  display: block;
+}
+
+.no-small {
+  display: none;
+  @include media($medium-up) {
+    display: block;
+  }
+}
+
+.padded-border-top {
+  padding-top: 1.5rem;
+  border-top: $standard-border;
+  padding-bottom: 1.5rem;
+  @include media($large-up) {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+.underline-grey {
+  border-bottom: $standard-border;
+}
+
+.empty-state {
+  width: 100%;
+  color: $dark-grey;
+  text-align: center;
+  font-size: 0.875rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.lowercase {
+  text-transform: lowercase !important;
+}
+
+.dotted-stroke {
+  border-bottom: $border-dotted;
+}
+
+.mast {
+  padding: 2rem 0 0;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.spaced-caps {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.no-padding {
+  padding: 0 !important;
+}

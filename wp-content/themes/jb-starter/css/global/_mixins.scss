@@ -1,0 +1,37 @@
+// Mixins
+
+%aa-text {
+  -webkit-font-smoothing: antialiased;
+}
+
+%no-aa-text {
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+%hide-text {
+  text-indent: 120%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+%clearfix {
+	&:after {
+    content: "";
+    display: table;
+    clear: both;
+	}
+}
+
+%hover-fix {
+  @include transform(translateZ(0));
+  @include backface-visibility(hidden);
+}
+
+%ot-settings {
+  // text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "kern";
+       -moz-font-feature-settings: "kern=1";
+       -moz-font-feature-settings: "kern";
+       -moz-font-feature-settings: "kern" 1;
+            font-feature-settings: "kern";
+}

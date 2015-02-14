@@ -1,0 +1,50 @@
+.nav-global {
+  .main-nav {
+    position: relative;
+    display: table;
+
+    li {
+      @include clearfix;
+      display: block;
+      float: left;
+      margin-bottom: -$border-width;
+      margin-right: $nav-horz-bumper-large;
+      a {
+        display: block;
+        float: left;
+        color: $text-mid-grey;
+        @include transition(color $hover-out ease-out, border-bottom $hover-out ease-out);
+        &:hover {
+          color: $mid-black;
+          @include transition(color $hover-in ease-out, border-bottom $hover-in ease-out);
+        }
+      }
+      &.current-menu-item {
+        a {
+          color: $mid-black;
+          border-bottom: $border-black;
+        }
+      }
+      &:last-of-type {
+        margin-right: 0;
+      }
+      &.artists-link {
+        margin-right: 0;
+        .sep.slash {
+          display: block;
+        }
+        .sep.dash {
+          display: none;
+          margin-left: $nav-horz-bumper-small;
+          margin-right: $nav-horz-bumper-small;
+        }
+        .sub-nav a {
+          font-weight: $type-bold;
+        }
+      }
+    }
+
+  
+  }
+
+}
