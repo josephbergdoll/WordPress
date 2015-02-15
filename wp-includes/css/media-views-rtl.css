@@ -235,20 +235,9 @@
 }
 
 .media-toolbar-secondary {
-	position: relative;
 	float: right;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding-left: 20px;
 	height: 100%;
 	max-width: 66%;
-}
-
-.media-toolbar-secondary .spinner {
-	position: absolute;
-	top: 2px;
-	left: 0px;
 }
 
 .media-toolbar-primary > .media-button,
@@ -460,8 +449,7 @@
 
 .compat-item .field {
 	float: left;
-	width: 65%;
-	margin: 1px;
+	width: 66%;
 }
 
 .compat-item .field input[type="text"],
@@ -470,13 +458,9 @@
 .compat-item .field input[type="number"],
 .compat-item .field input[type="search"],
 .compat-item .field input[type="tel"],
-.compat-item .field input[type="url"],
-.compat-item .field textarea {
+.compat-item .field input[type="url"] {
 	width: 100%;
 	margin: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
 }
 
 .sidebar-for-errors .attachment-details,
@@ -751,7 +735,6 @@
 	margin-top: 11px;
 	margin-left: 2%;
 	max-width: 47%;
-	width: 100%; /* prevents options from invisibly taking up horizontal space */
 }
 
 /**
@@ -773,7 +756,7 @@
 /**
  * Attachments
  */
-.wp-core-ui .attachments {
+.attachments {
 	margin: 0;
 	-webkit-overflow-scrolling: touch;
 }
@@ -781,7 +764,7 @@
 /**
  * Attachment
  */
-.wp-core-ui .attachment {
+.attachment {
 	position: relative;
 	float: right;
 	padding: 8px;
@@ -800,9 +783,9 @@
 	box-sizing: border-box;
 }
 
-.wp-core-ui .attachment:focus,
-.wp-core-ui .selected.attachment:focus,
-.wp-core-ui .attachment.details:focus {
+.attachment:focus,
+.selected.attachment:focus,
+.attachment.details:focus {
 	-webkit-box-shadow:
 		inset 0 0 2px 3px #fff,
 		inset 0 0 0 7px #5b9dd9;
@@ -812,7 +795,7 @@
 	outline: none;
 }
 
-.wp-core-ui .selected.attachment {
+.selected.attachment {
 	-webkit-box-shadow:
 		inset 0 0 0 5px #fff,
 		inset 0 0 0 7px #ccc;
@@ -821,7 +804,7 @@
 		inset 0 0 0 7px #ccc;
 }
 
-.wp-core-ui .attachment.details {
+.attachment.details {
 	-webkit-box-shadow:
 		inset 0 0 0 3px #fff,
 		inset 0 0 0 7px #1e8cbe;
@@ -830,7 +813,7 @@
 		inset 0 0 0 7px #1e8cbe;
 }
 
-.wp-core-ui .attachment-preview {
+.attachment-preview {
 	position: relative;
 	-webkit-box-shadow:
 		inset 0 0 15px rgba( 0, 0, 0, 0.1 ),
@@ -842,18 +825,18 @@
 	cursor: pointer;
 }
 
-.wp-core-ui .attachment-preview:before {
+.attachment-preview:before {
 	content: '';
 	display: block;
 	padding-top: 100%;
 }
 
-.wp-core-ui .attachment .icon {
+.attachment .icon {
 	margin: 0 auto;
 	overflow: hidden;
 }
 
-.wp-core-ui .attachment .thumbnail {
+.attachment .thumbnail {
 	overflow: hidden;
 	position: absolute;
 	top: 0;
@@ -865,15 +848,15 @@
 	transition: opacity .1s;
 }
 
-.wp-core-ui .attachment .portrait img {
+.attachment .portrait img {
 	max-width: 100%;
 }
 
-.wp-core-ui .attachment .landscape img {
+.attachment .landscape img {
 	max-height: 100%;
 }
 
-.wp-core-ui .attachment .thumbnail:after {
+.attachment .thumbnail:after {
 	content: '';
 	display: block;
 	position: absolute;
@@ -887,13 +870,13 @@
 }
 
 /* @noflip */
-.wp-core-ui .attachment .thumbnail img {
+.attachment .thumbnail img {
 	top: 0;
 	left: 0;
 }
 
 /* @noflip */
-.wp-core-ui .attachment .thumbnail .centered {
+.attachment .thumbnail .centered {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -904,24 +887,24 @@
 	transform: translate( 50%, 50% );
 }
 
-.wp-core-ui .attachment .thumbnail .centered img {
+.attachment .thumbnail .centered img {
 	-webkit-transform: translate( -50%, -50% );
 	-ms-transform: translate(-50%,-50%);
 	transform: translate( -50%, -50% );
 }
 
-.wp-core-ui .attachment .thumbnail .centered img.icon {
+.attachment .thumbnail .centered img.icon {
 	-webkit-transform: translate( -50%, -70% );
 	-ms-transform: translate(-50%,-70%);
 	transform: translate( -50%, -70% );
 }
 
-.ie8 .wp-core-ui .attachment img.icon {
+.ie8 .attachment img.icon {
 	top: 20%;
 	position: relative;
 }
 
-.wp-core-ui .attachment .filename {
+.attachment .filename {
 	position: absolute;
 	right: 0;
 	left: 0;
@@ -936,15 +919,15 @@
 	box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.15 );
 }
 
-.wp-core-ui .attachment .filename div {
+.attachment .filename div {
 	padding: 5px 10px;
 }
 
-.wp-core-ui .attachment .thumbnail img {
+.attachment .thumbnail img {
 	position: absolute;
 }
 
-.wp-core-ui .attachment .close {
+.attachment .close {
 	display: block;
 	position: absolute;
 	top: 5px;
@@ -970,15 +953,15 @@
 	transition-property: none;
 }
 
-.wp-core-ui .attachment a.close:hover,
-.wp-core-ui .attachment a.close:focus {
+.attachment a.close:hover,
+.attachment a.close:focus {
 	-webkit-box-shadow: 0 0 0 1px rgba( 0, 0, 0, 0.6 );
 	box-shadow: 0 0 0 1px rgba( 0, 0, 0, 0.6 );
 	background-position: -36px 4px;
 
 }
 
-.wp-core-ui .attachment .check {
+.attachment .check {
 	display: none;
 	height: 24px;
 	width: 24px;
@@ -992,24 +975,24 @@
 	box-shadow: 0 0 0 1px #fff, 0 0 0 2px rgba( 0, 0, 0, 0.15 );
 }
 
-.wp-core-ui .attachment .check div {
+.attachment .check div {
 	background-position: -1px 0;
 	height: 15px;
 	width: 15px;
 	margin: 5px;
 }
 
-.wp-core-ui .attachment .check:hover div {
+.attachment .check:hover div {
 	background-position: -40px 0;
 }
 
-.wp-core-ui .attachment.selected .check {
+.attachment.selected .check {
 	display: block;
 }
 
-.wp-core-ui .attachment.details .check,
-.wp-core-ui .attachment.selected .check:focus,
-.wp-core-ui .media-frame.mode-grid .attachment.selected .check {
+.attachment.details .check,
+.attachment.selected .check:focus,
+.media-frame.mode-grid .attachment.selected .check {
 	background-color: #1e8cbe;
 	-webkit-box-shadow:
 		0 0 0 1px #fff,
@@ -1019,18 +1002,18 @@
 		0 0 0 2px #1e8cbe;
 }
 
-.wp-core-ui .attachment.details .check div,
-.wp-core-ui .media-frame.mode-grid .attachment.selected .check div {
+.attachment.details .check div,
+.media-frame.mode-grid .attachment.selected .check div {
 	background-position: -21px 0;
 }
 
-.wp-core-ui .attachment.details .check:hover div,
-.wp-core-ui .attachment.selected .check:focus div,
-.wp-core-ui .media-frame.mode-grid .attachment.selected .check:hover div {
+.attachment.details .check:hover div,
+.attachment.selected .check:focus div,
+.media-frame.mode-grid .attachment.selected .check:hover div {
 	background-position: -60px 0;
 }
 
-.wp-core-ui .media-frame .attachment .describe {
+.media-frame .attachment .describe {
 	position: relative;
 	display: block;
 	width: 100%;
@@ -1775,8 +1758,8 @@
 	padding: 12px 14px;
 	width: 100%;
 	min-width: 200px;
-	-webkit-box-shadow: inset -2px 2px 4px -2px rgba( 0, 0, 0, 0.1 );
-	box-shadow: inset -2px 2px 4px -2px rgba( 0, 0, 0, 0.1 );
+	-webkit-box-shadow: inset 2px 2px 4px -2px rgba( 0, 0, 0, 0.1 );
+	box-shadow: inset 2px 2px 4px -2px rgba( 0, 0, 0, 0.1 );
 }
 
 .media-frame .embed-url .spinner {
@@ -2371,7 +2354,7 @@
 	}
 
 	.media-modal .attachments-browser .media-toolbar .spinner {
-		margin: 14px 0 0;
+		margin: 14px 8px 0;
 	}
 
 	/* Text inputs need to be 16px, or they force zooming on iOS */

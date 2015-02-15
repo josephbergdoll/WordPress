@@ -12,7 +12,6 @@ require_once( dirname( __FILE__ ) . '/admin.php' );
 $parent_file = 'edit-comments.php';
 $submenu_file = 'edit-comments.php';
 
-global $action;
 wp_reset_vars( array('action') );
 
 if ( isset( $_POST['deletecomment'] ) )

@@ -429,8 +429,6 @@ var wpNavMenu;
 					totalMenuItems = $('#menu-to-edit li').length,
 					hasSameDepthSibling = menuItem.nextAll( '.menu-item-depth-' + depth ).length;
 
-				menuItem.find( '.field-move' ).toggle( totalMenuItems > 1 ); 
-
 				// Where can they move this menu item?
 				if ( 0 !== position ) {
 					thisLink = menuItem.find( '.menus-move-up' );
@@ -1189,7 +1187,6 @@ var wpNavMenu;
 						$( '.drag-instructions' ).hide();
 						ins.removeClass( 'menu-instructions-inactive' );
 					}
-					api.refreshAdvancedAccessibility();
 				});
 		},
 

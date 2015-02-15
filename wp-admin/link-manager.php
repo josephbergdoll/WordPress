@@ -84,7 +84,7 @@ if ( isset($_REQUEST['deleted']) ) {
 }
 ?>
 
-<form id="posts-filter" method="get">
+<form id="posts-filter" action="" method="get">
 
 <?php $wp_list_table->search_box( __( 'Search Links' ), 'link' ); ?>
 

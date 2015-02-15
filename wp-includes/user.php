@@ -112,7 +112,7 @@ function wp_signon( $credentials = array(), $secure_cookie = '' ) {
  * @return WP_User|WP_Error WP_User on success, WP_Error on failure.
  */
 function wp_authenticate_username_password($user, $username, $password) {
-	if ( $user instanceof WP_User ) {
+	if ( is_a( $user, 'WP_User' ) ) {
 		return $user;
 	}
 
@@ -167,7 +167,7 @@ function wp_authenticate_username_password($user, $username, $password) {
  * @return WP_User|WP_Error WP_User on success, WP_Error on failure.
  */
 function wp_authenticate_cookie($user, $username, $password) {
-	if ( $user instanceof WP_User ) {
+	if ( is_a( $user, 'WP_User' ) ) {
 		return $user;
 	}
 
@@ -202,7 +202,7 @@ function wp_authenticate_cookie($user, $username, $password) {
  * @return WP_User|WP_Error WP_User on success, WP_Error if the user is considered a spammer.
  */
 function wp_authenticate_spam_check( $user ) {
-	if ( $user instanceof WP_User && is_multisite() ) {
+	if ( $user && is_a( $user, 'WP_User' ) && is_multisite() ) {
 		/**
 		 * Filter whether the user has been marked as a spammer.
 		 *
@@ -473,8 +473,6 @@ class WP_User_Query {
 	 */
 	private $total_users = 0;
 
-	private $compat_fields = array( 'results', 'total_users' );
-
 	// SQL clauses
 	public $query_fields;
 	public $query_from;
@@ -488,6 +486,7 @@ class WP_User_Query {
 	 * @since 3.1.0
 	 *
 	 * @param null|string|array $args Optional. The query variables.
+	 * @return WP_User_Query
 	 */
 	public function __construct( $query = null ) {
 		if ( ! empty( $query ) ) {
@@ -500,7 +499,6 @@ class WP_User_Query {
 	 * Prepare the query variables.
 	 *
 	 * @since 3.1.0
-	 * @since 4.2.0 Added 'meta_value_num' support for `$orderby` parameter.
 	 * @access public
 	 *
 	 * @param string|array $query {
@@ -522,9 +520,8 @@ class WP_User_Query {
 	 *     @type array        $search_columns  Array of column names to be searched. Accepts 'ID', 'login',
 	 *                                         'nicename', 'email', 'url'. Default empty array.
 	 *     @type string       $orderby         Field to sort the retrieved users by. Accepts 'ID', 'display_name',
-	 *                                         'login', 'nicename', 'email', 'url', 'registered', 'post_count',
-	 *                                         'meta_value' or 'meta_value_num'. To use 'meta_value' or
-	 *                                         'meta_value_num', `$meta_key` must be also be defined.
+	 *                                         'login', 'nicename', 'email', 'url', 'registered', 'post_count', or
+	 *                                         'meta_value'. To use 'meta_value', `$meta_key` must be also be defined.
 	 *                                         Default 'user_login'.
 	 *     @type string       $order           Designates ascending or descending order of users. Accepts 'ASC',
 	 *                                         'DESC'. Default 'ASC'.
@@ -633,9 +630,7 @@ class WP_User_Query {
 				$orderby = 'ID';
 			} elseif ( 'meta_value' == $qv['orderby'] ) {
 				$orderby = "$wpdb->usermeta.meta_value";
-			} elseif ( 'meta_value_num' == $qv['orderby'] ) {
-				$orderby = "$wpdb->usermeta.meta_value+0";
-			} elseif ( 'include' === $qv['orderby'] && ! empty( $include ) ) {
+			} else if ( 'include' === $qv['orderby'] && ! empty( $include ) ) {
 				// Sanitized earlier.
 				$include_sql = implode( ',', $include );
 				$orderby = "FIELD( $wpdb->users.ID, $include_sql )";
@@ -934,9 +929,7 @@ class WP_User_Query {
 	 * @return mixed Property.
 	 */
 	public function __get( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
-			return $this->$name;
-		}
+		return $this->$name;
 	}
 
 	/**
@@ -945,14 +938,12 @@ class WP_User_Query {
 	 * @since 4.0.0
 	 * @access public
 	 *
-	 * @param string $name  Property to check if set.
+	 * @param string $name  Property to set.
 	 * @param mixed  $value Property value.
 	 * @return mixed Newly-set property.
 	 */
 	public function __set( $name, $value ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
-			return $this->$name = $value;
-		}
+		return $this->$name = $value;
 	}
 
 	/**
@@ -965,9 +956,7 @@ class WP_User_Query {
 	 * @return bool Whether the property is set.
 	 */
 	public function __isset( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
-			return isset( $this->$name );
-		}
+		return isset( $this->$name );
 	}
 
 	/**
@@ -979,9 +968,7 @@ class WP_User_Query {
 	 * @param string $name Property to unset.
 	 */
 	public function __unset( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
-			unset( $this->$name );
-		}
+		unset( $this->$name );
 	}
 
 	/**
@@ -995,10 +982,7 @@ class WP_User_Query {
 	 * @return mixed|bool Return value of the callback, false otherwise.
 	 */
 	public function __call( $name, $arguments ) {
-		if ( 'get_search_sql' === $name ) {
-			return call_user_func_array( array( $this, $name ), $arguments );
-		}
-		return false;
+		return call_user_func_array( array( $this, $name ), $arguments );
 	}
 }
 
@@ -1530,7 +1514,7 @@ function sanitize_user_field($field, $value, $user_id, $context) {
 			$value = esc_html( $value ); // textarea_escaped?
 		else
 			$value = esc_attr($value);
-	} elseif ( 'db' == $context ) {
+	} else if ( 'db' == $context ) {
 		if ( $prefixed ) {
 			/** This filter is documented in wp-includes/post.php */
 			$value = apply_filters( "pre_{$field}", $value );
@@ -1575,11 +1559,11 @@ function sanitize_user_field($field, $value, $user_id, $context) {
 	if ( 'user_url' == $field )
 		$value = esc_url($value);
 
-	if ( 'attribute' == $context ) {
-		$value = esc_attr( $value );
-	} elseif ( 'js' == $context ) {
-		$value = esc_js( $value );
-	}
+	if ( 'attribute' == $context )
+		$value = esc_attr($value);
+	else if ( 'js' == $context )
+		$value = esc_js($value);
+
 	return $value;
 }
 
@@ -1714,9 +1698,9 @@ function validate_username( $username ) {
 function wp_insert_user( $userdata ) {
 	global $wpdb;
 
-	if ( $userdata instanceof stdClass ) {
+	if ( is_a( $userdata, 'stdClass' ) ) {
 		$userdata = get_object_vars( $userdata );
-	} elseif ( $userdata instanceof WP_User ) {
+	} elseif ( is_a( $userdata, 'WP_User' ) ) {
 		$userdata = $userdata->to_array();
 	}
 	// Are we updating or creating?
@@ -1973,22 +1957,17 @@ function wp_insert_user( $userdata ) {
  * @return int|WP_Error The updated user's ID or a WP_Error object if the user could not be updated.
  */
 function wp_update_user($userdata) {
-	if ( $userdata instanceof stdClass ) {
+	if ( is_a( $userdata, 'stdClass' ) )
 		$userdata = get_object_vars( $userdata );
-	} elseif ( $userdata instanceof WP_User ) {
+	elseif ( is_a( $userdata, 'WP_User' ) )
 		$userdata = $userdata->to_array();
-	}
 
-	$ID = isset( $userdata['ID'] ) ? (int) $userdata['ID'] : 0;
-	if ( ! $ID ) {
-		return new WP_Error( 'invalid_user_id', __( 'Invalid user ID.' ) );
-	}
+	$ID = (int) $userdata['ID'];
 
 	// First, get all of the original fields
 	$user_obj = get_userdata( $ID );
-	if ( ! $user_obj ) {
+	if ( ! $user_obj )
 		return new WP_Error( 'invalid_user_id', __( 'Invalid user ID.' ) );
-	}
 
 	$user = $user_obj->to_array();
 

@@ -285,10 +285,7 @@ class WP_Comment_Query {
 	 * @return mixed|bool Return value of the callback, false otherwise.
 	 */
 	public function __call( $name, $arguments ) {
-		if ( 'get_search_sql' === $name ) {
-			return call_user_func_array( array( $this, $name ), $arguments );
-		}
-		return false;
+		return call_user_func_array( array( $this, $name ), $arguments );
 	}
 
 	/**
@@ -509,7 +506,7 @@ class WP_Comment_Query {
 		// Disable ORDER BY with 'none', an empty array, or boolean false.
 		if ( in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
-		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
+		} else if ( ! empty( $this->query_vars['orderby'] ) ) {
 			$ordersby = is_array( $this->query_vars['orderby'] ) ?
 				$this->query_vars['orderby'] :
 				preg_split( '/[,\s]/', $this->query_vars['orderby'] );
@@ -677,9 +674,7 @@ class WP_Comment_Query {
 		if ( ! empty( $post_fields ) ) {
 			$join_posts_table = true;
 			foreach ( $post_fields as $field_name => $field_value ) {
-				// $field_value may be an array.
-				$esses = array_fill( 0, count( (array) $field_value ), '%s' );
-				$where[] = $wpdb->prepare( " {$wpdb->posts}.{$field_name} IN (" . implode( ',', $esses ) . ')', $field_value );
+				$where[] = $wpdb->prepare( " {$wpdb->posts}.{$field_name} = %s", $field_value );
 			}
 		}
 
@@ -1925,17 +1920,7 @@ function wp_insert_comment( $commentdata ) {
 
 	$compacted = compact( 'comment_post_ID', 'comment_author', 'comment_author_email', 'comment_author_url', 'comment_author_IP', 'comment_date', 'comment_date_gmt', 'comment_content', 'comment_karma', 'comment_approved', 'comment_agent', 'comment_type', 'comment_parent', 'user_id' );
 	if ( ! $wpdb->insert( $wpdb->comments, $compacted ) ) {
-		$fields = array( 'comment_author', 'comment_author_email', 'comment_author_url', 'comment_content' );
-
-		foreach( $fields as $field ) {
-			if ( isset( $compacted[ $field ] ) ) {
-				$post_data[ $field ] = $wpdb->strip_invalid_text_for_column( $wpdb->comments, $field, $compacted[ $field ] );
-			}
-		}
-
-		if ( ! $wpdb->insert( $wpdb->comments, $compacted ) ) {
-			return false;
-		}
+		return false;
 	}
 
 	$id = (int) $wpdb->insert_id;
@@ -2215,12 +2200,6 @@ function wp_update_comment($commentarr) {
 	if ( empty( $comment ) ) {
 		return 0;
 	}
-
-	// Make sure that the comment post ID is valid (if specified).
-	if ( isset( $commentarr['comment_post_ID'] ) && ! get_post( $commentarr['comment_post_ID'] ) ) {
-		return 0;
-	}
-
 	// Escape data pulled from DB.
 	$comment = wp_slash($comment);
 
@@ -2247,15 +2226,15 @@ function wp_update_comment($commentarr) {
 
 	if ( ! isset( $data['comment_approved'] ) ) {
 		$data['comment_approved'] = 1;
-	} elseif ( 'hold' == $data['comment_approved'] ) {
+	} else if ( 'hold' == $data['comment_approved'] ) {
 		$data['comment_approved'] = 0;
-	} elseif ( 'approve' == $data['comment_approved'] ) {
+	} else if ( 'approve' == $data['comment_approved'] ) {
 		$data['comment_approved'] = 1;
 	}
 
 	$comment_ID = $data['comment_ID'];
 	$comment_post_ID = $data['comment_post_ID'];
-	$keys = array( 'comment_post_ID', 'comment_content', 'comment_author', 'comment_author_email', 'comment_approved', 'comment_karma', 'comment_author_url', 'comment_date', 'comment_date_gmt', 'comment_type', 'comment_parent', 'user_id' );
+	$keys = array( 'comment_content', 'comment_author', 'comment_author_email', 'comment_approved', 'comment_karma', 'comment_author_url', 'comment_date', 'comment_date_gmt', 'comment_parent' );
 	$data = wp_array_slice_assoc( $data, $keys );
 	$rval = $wpdb->update( $wpdb->comments, $data, compact( 'comment_ID' ) );
 

@@ -368,15 +368,14 @@ final class WP_Screen {
 	 * @since 3.3.0
 	 * @access public
 	 *
-	 * @param string|WP_Screen $hook_name Optional. The hook name (also known as the hook suffix) used to determine the screen.
+	 * @param string $hook_name Optional. The hook name (also known as the hook suffix) used to determine the screen.
 	 * 	Defaults to the current $hook_suffix global.
 	 * @return WP_Screen Screen object.
 	 */
 	public static function get( $hook_name = '' ) {
 
-		if ( $hook_name instanceof WP_Screen ) {
+		if ( is_a( $hook_name, 'WP_Screen' ) )
 			return $hook_name;
-		}
 
 		$post_type = $taxonomy = null;
 		$in_admin = false;
@@ -1026,7 +1025,7 @@ final class WP_Screen {
 
 		?>
 		<div id="screen-options-wrap" class="hidden" tabindex="-1" aria-label="<?php esc_attr_e('Screen Options Tab'); ?>">
-		<form id="adv-settings" method="post">
+		<form id="adv-settings" action="" method="post">
 		<?php if ( isset( $wp_meta_boxes[ $this->id ] ) || $this->get_option( 'per_page' ) || ( $columns && empty( $columns['_title'] ) ) ) : ?>
 			<h5><?php _e( 'Show on screen' ); ?></h5>
 		<?php

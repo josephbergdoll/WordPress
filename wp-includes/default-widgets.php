@@ -287,6 +287,8 @@ class WP_Widget_Archives extends WP_Widget {
 		if ( $d ) {
 ?>
 		<select name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'>
+			<option value=""><?php esc_attr_e( 'Select Month' ); ?></option>
+
 			<?php
 			/**
 			 * Filter the arguments for the Archives widget drop-down.
@@ -297,34 +299,12 @@ class WP_Widget_Archives extends WP_Widget {
 			 *
 			 * @param array $args An array of Archives widget drop-down arguments.
 			 */
-			$dropdown_args = apply_filters( 'widget_archives_dropdown_args', array(
+			wp_get_archives( apply_filters( 'widget_archives_dropdown_args', array(
 				'type'            => 'monthly',
 				'format'          => 'option',
 				'show_post_count' => $c
-			) );
-
-			switch ( $dropdown_args['type'] ) {
-				case 'yearly':
-					$label = __( 'Select Year' );
-					break;
-				case 'monthly':
-					$label = __( 'Select Month' );
-					break;
-				case 'daily':
-					$label = __( 'Select Day' );
-					break;
-				case 'weekly':
-					$label = __( 'Select Week' );
-					break;
-				default:
-					$label = __( 'Select Post' );
-					break;
-			}
-			?>
-
-			<option value=""><?php echo esc_attr( $label ); ?></option>
-			<?php wp_get_archives( $dropdown_args ); ?>
-
+			) ) );
+?>
 		</select>
 <?php
 		} else {
@@ -1286,7 +1266,6 @@ class WP_Widget_Tag_Cloud extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance = array();
 		$instance['title'] = strip_tags(stripslashes($new_instance['title']));
 		$instance['taxonomy'] = stripslashes($new_instance['taxonomy']);
 		return $instance;
@@ -1344,26 +1323,7 @@ class WP_Widget_Tag_Cloud extends WP_Widget {
 		if ( !empty($instance['title']) )
 			echo $args['before_title'] . $instance['title'] . $args['after_title'];
 
-		$nav_menu_args = array(
-			'fallback_cb' => '',
-			'menu'        => $nav_menu
-		);
-
-		/**
-		 * Filter the arguments for the Custom Menu widget.
-		 *
-		 * @since 4.2.0
-		 *
-		 * @param array    $nav_menu_args {
-		 *     An array of arguments passed to wp_nav_menu() to retrieve a custom menu.
-		 *
-		 *     @type callback|bool $fallback_cb Callback to fire if the menu doesn't exist. Default empty.
-		 *     @type mixed         $menu        Menu ID, slug, or name.
-		 * }
-		 * @param stdClass $nav_menu      Nav menu object for the current menu.
-		 * @param array    $args          Display arguments for the current widget.
-		 */
-		wp_nav_menu( apply_filters( 'widget_nav_menu_args', $nav_menu_args, $nav_menu, $args ) );
+		wp_nav_menu( array( 'fallback_cb' => '', 'menu' => $nav_menu ) );
 
 		echo $args['after_widget'];
 	}

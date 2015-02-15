@@ -54,6 +54,7 @@ get_current_screen()->set_help_sidebar(
 function options_permalink_add_js() {
 	?>
 <script type="text/javascript">
+//<![CDATA[
 jQuery(document).ready(function() {
 	jQuery('.permalink-structure input:radio').change(function() {
 		if ( 'custom' == this.value )
@@ -64,6 +65,7 @@ jQuery(document).ready(function() {
 		jQuery("#custom_selection").attr('checked', 'checked');
 	});
 });
+//]]>
 </script>
 <?php
 }
@@ -151,13 +153,12 @@ if ( ! empty( $_GET['settings-updated'] ) ) : ?>
 <div id="message" class="updated"><p><?php
 if ( ! is_multisite() ) {
 	if ( $iis7_permalinks ) {
-		if ( $permalink_structure && ! $usingpi && ! $writable ) {
+		if ( $permalink_structure && ! $usingpi && ! $writable )
 			_e('You should update your web.config now.');
-		} elseif ( $permalink_structure && ! $usingpi && $writable ) {
+		else if ( $permalink_structure && ! $usingpi && $writable )
 			_e('Permalink structure updated. Remove write access on web.config file now!');
-		} else {
+		else
 			_e('Permalink structure updated.');
-		}
 	} elseif ( $is_nginx ) {
 		_e('Permalink structure updated.');
 	} else {

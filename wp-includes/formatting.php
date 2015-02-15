@@ -86,11 +86,11 @@ function wptexturize($text, $reset = false) {
 
 		// if a plugin has provided an autocorrect array, use it
 		if ( isset($wp_cockneyreplace) ) {
-			$cockney = array_keys( $wp_cockneyreplace );
-			$cockneyreplace = array_values( $wp_cockneyreplace );
+			$cockney = array_keys($wp_cockneyreplace);
+			$cockneyreplace = array_values($wp_cockneyreplace);
 		} elseif ( "'" != $apos ) { // Only bother if we're doing a replacement.
-			$cockney = array( "'tain't", "'twere", "'twas", "'tis", "'twill", "'til", "'bout", "'nuff", "'round", "'cause", "'em" );
-			$cockneyreplace = array( $apos . "tain" . $apos . "t", $apos . "twere", $apos . "twas", $apos . "tis", $apos . "twill", $apos . "til", $apos . "bout", $apos . "nuff", $apos . "round", $apos . "cause", $apos . "em" );
+			$cockney = array( "'tain't", "'twere", "'twas", "'tis", "'twill", "'til", "'bout", "'nuff", "'round", "'cause" );
+			$cockneyreplace = array( $apos . "tain" . $apos . "t", $apos . "twere", $apos . "twas", $apos . "tis", $apos . "twill", $apos . "til", $apos . "bout", $apos . "nuff", $apos . "round", $apos . "cause" );
 		} else {
 			$cockney = $cockneyreplace = array();
 		}
@@ -174,9 +174,9 @@ function wptexturize($text, $reset = false) {
 
 		// Dashes and spaces
 		$dynamic[ '/---/' ] = $em_dash;
-		$dynamic[ '/(?<=^|' . $spaces . ')--(?=$|' . $spaces . ')/' ] = $em_dash;
+		$dynamic[ '/(?<=' . $spaces . ')--(?=' . $spaces . ')/' ] = $em_dash;
 		$dynamic[ '/(?<!xn)--/' ] = $en_dash;
-		$dynamic[ '/(?<=^|' . $spaces . ')-(?=$|' . $spaces . ')/' ] = $en_dash;
+		$dynamic[ '/(?<=' . $spaces . ')-(?=' . $spaces . ')/' ] = $en_dash;
 
 		$dynamic_characters['dash'] = array_keys( $dynamic );
 		$dynamic_replacements['dash'] = array_values( $dynamic );
@@ -405,7 +405,7 @@ function wpautop($pee, $br = true) {
 
 	$pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
 	// Space things out a little
-	$allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
+	$allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|details|menu|summary)';
 	$pee = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
 	$pee = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
 	$pee = str_replace(array("\r\n", "\r"), "\n", $pee); // cross-platform newlines
@@ -550,14 +550,14 @@ function seems_utf8($str) {
 	reset_mbstring_encoding();
 	for ($i=0; $i < $length; $i++) {
 		$c = ord($str[$i]);
-		if ($c < 0x80) $n = 0; // 0bbbbbbb
-		elseif (($c & 0xE0) == 0xC0) $n=1; // 110bbbbb
-		elseif (($c & 0xF0) == 0xE0) $n=2; // 1110bbbb
-		elseif (($c & 0xF8) == 0xF0) $n=3; // 11110bbb
-		elseif (($c & 0xFC) == 0xF8) $n=4; // 111110bb
-		elseif (($c & 0xFE) == 0xFC) $n=5; // 1111110b
-		else return false; // Does not match any model
-		for ($j=0; $j<$n; $j++) { // n bytes matching 10bbbbbb follow ?
+		if ($c < 0x80) $n = 0; # 0bbbbbbb
+		elseif (($c & 0xE0) == 0xC0) $n=1; # 110bbbbb
+		elseif (($c & 0xF0) == 0xE0) $n=2; # 1110bbbb
+		elseif (($c & 0xF8) == 0xF0) $n=3; # 11110bbb
+		elseif (($c & 0xFC) == 0xF8) $n=4; # 111110bb
+		elseif (($c & 0xFE) == 0xFC) $n=5; # 1111110b
+		else return false; # Does not match any model
+		for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
 			if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
 				return false;
 		}
@@ -1022,7 +1022,6 @@ function remove_accents($string) {
 
 		$string = strtr($string, $chars);
 	} else {
-		$chars = array();
 		// Assume ISO-8859-1 if not UTF-8
 		$chars['in'] = chr(128).chr(131).chr(138).chr(142).chr(154).chr(158)
 			.chr(159).chr(162).chr(165).chr(181).chr(192).chr(193).chr(194)
@@ -1038,7 +1037,6 @@ function remove_accents($string) {
 		$chars['out'] = "EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy";
 
 		$string = strtr($string, $chars['in'], $chars['out']);
-		$double_chars = array();
 		$double_chars['in'] = array(chr(140), chr(156), chr(198), chr(208), chr(222), chr(223), chr(230), chr(240), chr(254));
 		$double_chars['out'] = array('OE', 'oe', 'AE', 'DH', 'TH', 'ss', 'ae', 'dh', 'th');
 		$string = str_replace($double_chars['in'], $double_chars['out'], $string);
@@ -1502,7 +1500,7 @@ function force_balance_tags( $text ) {
 				// or close to be safe $tag = '/' . $tag;
 			}
 			// if stacktop value = tag close value then pop
-			elseif ( $tagstack[$stacksize - 1] == $tag ) { // found closing tag
+			else if ( $tagstack[$stacksize - 1] == $tag ) { // found closing tag
 				$tag = '</' . $tag . '>'; // Close Tag
 				// Pop
 				array_pop( $tagstack );
@@ -2337,7 +2335,7 @@ function iso8601_to_datetime($date_string, $timezone = 'user') {
 
 		return gmdate('Y-m-d H:i:s', $timestamp);
 
-	} elseif ($timezone == 'user') {
+	} else if ($timezone == 'user') {
 		return preg_replace('#([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(Z|[\+|\-][0-9]{2,4}){0,1}#', '$1-$2-$3 $4:$5:$6', $date_string);
 	}
 }
@@ -3264,12 +3262,10 @@ function wp_make_link_relative( $link ) {
  * @return string Sanitized value.
  */
 function sanitize_option($option, $value) {
-	global $wpdb;
 
 	switch ( $option ) {
 		case 'admin_email' :
 		case 'new_admin_email' :
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			$value = sanitize_email( $value );
 			if ( ! is_email( $value ) ) {
 				$value = get_option( $option ); // Resets option to stored value in the case of failed sanitization
@@ -3318,7 +3314,6 @@ function sanitize_option($option, $value) {
 
 		case 'blogdescription':
 		case 'blogname':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			$value = wp_kses_post( $value );
 			$value = esc_html( $value );
 			break;
@@ -3341,7 +3336,6 @@ function sanitize_option($option, $value) {
 		case 'mailserver_login':
 		case 'mailserver_pass':
 		case 'upload_path':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			$value = strip_tags( $value );
 			$value = wp_kses_data( $value );
 			break;
@@ -3358,7 +3352,6 @@ function sanitize_option($option, $value) {
 			break;
 
 		case 'siteurl':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			if ( (bool)preg_match( '#http(s?)://(.+)#i', $value) ) {
 				$value = esc_url_raw($value);
 			} else {
@@ -3369,7 +3362,6 @@ function sanitize_option($option, $value) {
 			break;
 
 		case 'home':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			if ( (bool)preg_match( '#http(s?)://(.+)#i', $value) ) {
 				$value = esc_url_raw($value);
 			} else {
@@ -3390,7 +3382,6 @@ function sanitize_option($option, $value) {
 			break;
 
 		case 'illegal_names':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			if ( ! is_array( $value ) )
 				$value = explode( ' ', $value );
 
@@ -3402,7 +3393,6 @@ function sanitize_option($option, $value) {
 
 		case 'limited_email_domains':
 		case 'banned_email_domains':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			if ( ! is_array( $value ) )
 				$value = explode( "\n", $value );
 
@@ -3429,7 +3419,6 @@ function sanitize_option($option, $value) {
 		case 'permalink_structure':
 		case 'category_base':
 		case 'tag_base':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			$value = esc_url_raw( $value );
 			$value = str_replace( 'http://', '', $value );
 			break;
@@ -3441,7 +3430,6 @@ function sanitize_option($option, $value) {
 
 		case 'moderation_keys':
 		case 'blacklist_keys':
-			$value = $wpdb->strip_invalid_text_for_column( $wpdb->options, 'option_value', $value );
 			$value = explode( "\n", $value );
 			$value = array_filter( array_map( 'trim', $value ) );
 			$value = array_unique( $value );
@@ -3522,7 +3510,7 @@ function wp_pre_kses_less_than_callback( $matches ) {
  * @link http://www.php.net/sprintf
  *
  * @param string $pattern The string which formatted args are inserted.
- * @param mixed  $args ,... Arguments to be formatted into the $pattern string.
+ * @param mixed $args,... Arguments to be formatted into the $pattern string.
  * @return string The formatted string.
  */
 function wp_sprintf( $pattern ) {

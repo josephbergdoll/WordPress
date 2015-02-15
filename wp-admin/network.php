@@ -179,7 +179,7 @@ function network_step1( $errors = false ) {
 		die();
 	}
 
-	echo '<form method="post">';
+	echo '<form method="post" action="">';
 
 	wp_nonce_field( 'install-network-1' );
 

@@ -166,11 +166,11 @@ $datef = __( 'M j, Y @ G:i' );
 if ( 0 != $post->ID ) {
 	if ( 'future' == $post->post_status ) { // scheduled for publishing at a future date
 		$stamp = __('Scheduled for: <b>%1$s</b>');
-	} elseif ( 'publish' == $post->post_status || 'private' == $post->post_status ) { // already published
+	} else if ( 'publish' == $post->post_status || 'private' == $post->post_status ) { // already published
 		$stamp = __('Published on: <b>%1$s</b>');
-	} elseif ( '0000-00-00 00:00:00' == $post->post_date_gmt ) { // draft, 1 or more saves, no date specified
+	} else if ( '0000-00-00 00:00:00' == $post->post_date_gmt ) { // draft, 1 or more saves, no date specified
 		$stamp = __('Publish <b>immediately</b>');
-	} elseif ( time() < strtotime( $post->post_date_gmt . ' +0000' ) ) { // draft, 1 or more saves, future date specified
+	} else if ( time() < strtotime( $post->post_date_gmt . ' +0000' ) ) { // draft, 1 or more saves, future date specified
 		$stamp = __('Schedule for: <b>%1$s</b>');
 	} else { // draft, 1 or more saves, date specified
 		$stamp = __('Publish on: <b>%1$s</b>');
@@ -248,19 +248,19 @@ if ( !in_array( $post->post_status, array('publish', 'future', 'private') ) || 0
 	if ( $can_publish ) :
 		if ( !empty($post->post_date_gmt) && time() < strtotime( $post->post_date_gmt . ' +0000' ) ) : ?>
 		<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Schedule') ?>" />
-		<?php submit_button( __( 'Schedule' ), 'primary button-large', 'publish', false ); ?>
+		<?php submit_button( __( 'Schedule' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
 <?php	else : ?>
 		<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
-		<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false ); ?>
+		<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
 <?php	endif;
 	else : ?>
 		<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Submit for Review') ?>" />
-		<?php submit_button( __( 'Submit for Review' ), 'primary button-large', 'publish', false ); ?>
+		<?php submit_button( __( 'Submit for Review' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
 <?php
 	endif;
 } else { ?>
 		<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
-		<input name="save" type="submit" class="button button-primary button-large" id="publish" value="<?php esc_attr_e( 'Update' ) ?>" />
+		<input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update') ?>" />
 <?php
 } ?>
 </div>
@@ -330,7 +330,7 @@ function attachment_submit_meta_box( $post ) {
 	<div id="publishing-action">
 		<span class="spinner"></span>
 		<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
-		<input name="save" type="submit" class="button-primary button-large" id="publish" value="<?php esc_attr_e( 'Update' ) ?>" />
+		<input name="save" type="submit" class="button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update') ?>" />
 	</div>
 	<div class="clear"></div>
 </div><!-- #major-publishing-actions -->
@@ -755,7 +755,7 @@ function page_attributes_meta_box($post) {
  *                        include 'meta-box' or 'quick-edit'.
  */
 $default_title = apply_filters( 'default_page_template_title',  __( 'Default Template' ), 'meta-box' );
-?>
+?> 
 <option value="default"><?php echo esc_html( $default_title ); ?></option>
 <?php page_template_dropdown($template); ?>
 </select>
@@ -763,10 +763,8 @@ $default_title = apply_filters( 'default_page_template_title',  __( 'Default Tem
 	} ?>
 <p><strong><?php _e('Order') ?></strong></p>
 <p><label class="screen-reader-text" for="menu_order"><?php _e('Order') ?></label><input name="menu_order" type="text" size="4" id="menu_order" value="<?php echo esc_attr($post->menu_order) ?>" /></p>
-<?php if ( 'page' == $post->post_type && get_current_screen()->get_help_tabs() ) { ?>
-<p><?php _e( 'Need help? Use the Help tab in the upper right of your screen.' ); ?></p>
+<p><?php if ( 'page' == $post->post_type ) _e( 'Need help? Use the Help tab in the upper right of your screen.' ); ?></p>
 <?php
-	}
 }
 
 // -- Link related Meta Boxes
@@ -820,9 +818,9 @@ if ( !empty($_GET['action']) && 'edit' == $_GET['action'] && current_user_can('m
 
 <div id="publishing-action">
 <?php if ( !empty($link->link_id) ) { ?>
-	<input name="save" type="submit" class="button-large button-primary" id="publish" value="<?php esc_attr_e( 'Update Link' ) ?>" />
+	<input name="save" type="submit" class="button-large button-primary" id="publish" accesskey="p" value="<?php esc_attr_e('Update Link') ?>" />
 <?php } else { ?>
-	<input name="save" type="submit" class="button-large button-primary" id="publish" value="<?php esc_attr_e( 'Add Link' ) ?>" />
+	<input name="save" type="submit" class="button-large button-primary" id="publish" accesskey="p" value="<?php esc_attr_e('Add Link') ?>" />
 <?php } ?>
 </div>
 <div class="clear"></div>

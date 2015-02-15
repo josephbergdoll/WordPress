@@ -18,8 +18,6 @@ if ( 'attachment' === $typenow ) {
 	}
 }
 
-global $post_type, $post_type_object;
-
 $post_type = $typenow;
 $post_type_object = get_post_type_object( $post_type );
 
@@ -309,7 +307,7 @@ $_SERVER['REQUEST_URI'] = remove_query_arg( array( 'locked', 'skipped', 'updated
 
 <?php $wp_list_table->views(); ?>
 
-<form id="posts-filter" method="get">
+<form id="posts-filter" action="" method="get">
 
 <?php $wp_list_table->search_box( $post_type_object->labels->search_items, 'post' ); ?>
 

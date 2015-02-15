@@ -323,7 +323,7 @@
 			var windowPos = $window.scrollTop(),
 				type = event && event.type,
 				resize = type !== 'scroll',
-				visual = mceEditor && ! mceEditor.isHidden(),
+				visual = ( mceEditor && ! mceEditor.isHidden() ),
 				buffer = autoresizeMinHeight,
 				postBodyTop = $postBody.offset().top,
 				borderWidth = 1,
@@ -348,11 +348,6 @@
 				$top = $textTop;
 				$editor = $textEditor;
 				topHeight = heights.textTopHeight;
-			}
-
-			// TinyMCE still intializing.
-			if ( ! visual && ! $top.length ) {
-				return;
 			}
 
 			topPos = $top.parent().offset().top;
@@ -385,8 +380,7 @@
 						width: contentWrapWidth - ( borderWidth * 2 ) - ( visual ? 0 : ( $top.outerWidth() - $top.width() ) )
 					} );
 
-					$statusBar.attr( 'style', advanced ? '' : 'visibility: hidden;' );
-					$bottom.attr( 'style', '' );
+					$statusBar.add( $bottom ).attr( 'style', '' );
 				}
 			} else {
 				// Maybe pin the top.
@@ -495,8 +489,11 @@
 						( windowPos + heights.windowHeight ) > ( editorPos + editorHeight + heights.bottomHeight + heights.statusBarHeight - borderWidth ) ) ) {
 					fixedBottom = false;
 
-					$statusBar.attr( 'style', advanced ? '' : 'visibility: hidden;' );
-					$bottom.attr( 'style', '' );
+					$statusBar.add( $bottom ).attr( 'style', '' );
+
+					if ( ! advanced ) {
+						$statusBar.css( 'visibility', 'hidden' );
+					}
 				}
 			}
 
@@ -685,13 +682,7 @@
 		}
 
 		function off() {
-			var height = parseInt( window.getUserSetting( 'ed_size', 300 ), 10 );
-
-			if ( height < 50 ) {
-				height = 50;
-			} else if ( height > 5000 ) {
-				height = 5000;
-			}
+			var height = window.getUserSetting('ed_size');
 
 			// Scroll to the top when triggering this from JS.
 			// Ensures toolbars are reset properly.

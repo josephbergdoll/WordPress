@@ -23,7 +23,7 @@ elseif ( isset( $_POST['post_ID'] ) )
 else
  	$post_id = $post_ID = 0;
 
-global $post_type, $post_type_object, $post;
+$post = $post_type = $post_type_object = null;
 
 if ( $post_id )
 	$post = get_post( $post_id );

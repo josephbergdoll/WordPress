@@ -64,7 +64,7 @@ if ( empty( $blogs ) ) :
 	echo '</p>';
 else :
 ?>
-<form id="myblogs" method="post">
+<form id="myblogs" action="" method="post">
 	<?php
 	choose_primary_blog();
 	/**
@@ -75,7 +75,7 @@ else :
 	do_action( 'myblogs_allblogs_options' );
 	?>
 	<br clear="all" />
-	<table class="widefat fixed striped">
+	<table class="widefat fixed">
 	<?php
 	/**
 	 * Enable the Global Settings section on the My Sites screen.
@@ -109,8 +109,10 @@ else :
 		$split = $split + $cols;
 	}
 
+	$c = '';
 	foreach ( $rows as $row ) {
-		echo "<tr>";
+		$c = $c == 'alternate' ? '' : 'alternate';
+		echo "<tr class='$c'>";
 		$i = 0;
 		foreach ( $row as $user_blog ) {
 			$s = $i == 3 ? '' : 'border-right: 1px solid #ccc;';

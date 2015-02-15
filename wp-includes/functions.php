@@ -182,7 +182,7 @@ function number_format_i18n( $number, $decimals = 0 ) {
 /**
  * Convert number of bytes largest unit bytes will fit into.
  *
- * It is easier to read 1 kB than 1024 bytes and 1 MB than 1048576 bytes. Converts
+ * It is easier to read 1kB than 1024 bytes and 1MB than 1048576 bytes. Converts
  * number of bytes to human readable number by taking the number of that unit
  * that the bytes will go into it. Supports TB value.
  *
@@ -206,14 +206,11 @@ function size_format( $bytes, $decimals = 0 ) {
 		'GB' => 1073741824,     // pow( 1024, 3)
 		'MB' => 1048576,        // pow( 1024, 2)
 		'kB' => 1024,           // pow( 1024, 1)
-		'B'  => 1,              // pow( 1024, 0)
+		'B ' => 1,              // pow( 1024, 0)
 	);
-
-	foreach ( $quant as $unit => $mag ) {
-		if ( doubleval( $bytes ) >= $mag ) {
+	foreach ( $quant as $unit => $mag )
+		if ( doubleval($bytes) >= $mag )
 			return number_format_i18n( $bytes / $mag, $decimals ) . ' ' . $unit;
-		}
-	}
 
 	return false;
 }
@@ -703,7 +700,7 @@ function _http_build_query( $data, $prefix = null, $sep = null, $key = '', $urle
 			$k = $key . '%5B' . $k . '%5D';
 		if ( $v === null )
 			continue;
-		elseif ( $v === false )
+		elseif ( $v === FALSE )
 			$v = '0';
 
 		if ( is_array($v) || is_object($v) )
@@ -869,7 +866,7 @@ function wp_remote_fopen( $uri ) {
  *
  * @since 2.0.0
  *
- * @param string|array $query_vars Default WP_Query arguments.
+ * @param string $query_vars Default WP_Query arguments.
  */
 function wp( $query_vars = '' ) {
 	global $wp, $wp_query, $wp_the_query;
@@ -1437,7 +1434,7 @@ function wp_get_referer() {
 	$ref = false;
 	if ( ! empty( $_REQUEST['_wp_http_referer'] ) )
 		$ref = wp_unslash( $_REQUEST['_wp_http_referer'] );
-	elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) )
+	else if ( ! empty( $_SERVER['HTTP_REFERER'] ) )
 		$ref = wp_unslash( $_SERVER['HTTP_REFERER'] );
 
 	if ( $ref && $ref !== wp_unslash( $_SERVER['REQUEST_URI'] ) )
@@ -1670,11 +1667,11 @@ function wp_is_writable( $path ) {
  */
 function win_is_writable( $path ) {
 
-	if ( $path[strlen( $path ) - 1] == '/' ) { // if it looks like a directory, check a random file within the directory
+	if ( $path[strlen( $path ) - 1] == '/' ) // if it looks like a directory, check a random file within the directory
 		return win_is_writable( $path . uniqid( mt_rand() ) . '.tmp');
-	} elseif ( is_dir( $path ) ) { // If it's a directory (and not a file) check a random file within the directory
+	else if ( is_dir( $path ) ) // If it's a directory (and not a file) check a random file within the directory
 		return win_is_writable( $path . '/' . uniqid( mt_rand() ) . '.tmp' );
-	}
+
 	// check tmp file for read/write capabilities
 	$should_delete_tmp_file = !file_exists( $path );
 	$f = @fopen( $path, 'a' );
@@ -2177,7 +2174,7 @@ function wp_get_mime_types() {
 	'gif' => 'image/gif',
 	'png' => 'image/png',
 	'bmp' => 'image/bmp',
-	'tiff|tif' => 'image/tiff',
+	'tif|tiff' => 'image/tiff',
 	'ico' => 'image/x-icon',
 	// Video formats.
 	'asf|asx' => 'video/x-ms-asf',
@@ -2684,11 +2681,11 @@ function wp_json_encode( $data, $options = 0, $depth = 512 ) {
 /**
  * Perform sanity checks on data that shall be encoded to JSON.
  *
- * @ignore
+ * @see wp_json_encode()
+ *
  * @since 4.1.0
  * @access private
- *
- * @see wp_json_encode()
+ * @internal
  *
  * @param mixed $data  Variable (usually an array or object) to encode as JSON.
  * @param int   $depth Maximum depth to walk through $data. Must be greater than 0.
@@ -2747,11 +2744,11 @@ function _wp_json_sanity_check( $data, $depth ) {
 /**
  * Convert a string to UTF-8, so that it can be safely encoded to JSON.
  *
- * @ignore
+ * @see _wp_json_sanity_check()
+ *
  * @since 4.1.0
  * @access private
- *
- * @see _wp_json_sanity_check()
+ * @internal
  *
  * @param string $string The string which is to be converted.
  * @return string The checked string.
@@ -3172,9 +3169,8 @@ function wp_list_filter( $list, $args = array(), $operator = 'AND' ) {
  * @param int|string $field     Field from the object to place instead of the entire object
  * @param int|string $index_key Optional. Field from the object to use as keys for the new array.
  *                              Default null.
- * @return array Array of found values. If `$index_key` is set, an array of found values with keys
- *               corresponding to `$index_key`. If `$index_key` is null, array keys from the original
- *               `$list` will be preserved in the results.
+ * @return array Array of found values. If $index_key is set, an array of found values with keys
+ *               corresponding to $index_key.
  */
 function wp_list_pluck( $list, $field, $index_key = null ) {
 	if ( ! $index_key ) {
@@ -3620,7 +3616,7 @@ function iis7_supports_permalinks() {
 		 * Lastly we make sure that PHP is running via FastCGI. This is important because if it runs
 		 * via ISAPI then pretty permalinks will not work.
 		 */
-		$supports_permalinks = class_exists('DOMDocument') && isset($_SERVER['IIS_UrlRewriteModule']) && ( PHP_SAPI == 'cgi-fcgi' );
+		$supports_permalinks = class_exists('DOMDocument') && isset($_SERVER['IIS_UrlRewriteModule']) && ( php_sapi_name() == 'cgi-fcgi' );
 	}
 
 	/**
@@ -4321,7 +4317,7 @@ function send_nosniff_header() {
 /**
  * Return a MySQL expression for selecting the week number based on the start_of_week option.
  *
- * @ignore
+ * @internal
  * @since 3.0.0
  *
  * @param string $column Database column.

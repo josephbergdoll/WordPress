@@ -136,7 +136,7 @@ function wpmu_delete_blog( $blog_id, $drop = false ) {
 		$index = 0;
 
 		while ( $index < count( $stack ) ) {
-			// Get indexed directory from stack
+			# Get indexed directory from stack
 			$dir = $stack[$index];
 
 			$dh = @opendir( $dir );
@@ -145,11 +145,10 @@ function wpmu_delete_blog( $blog_id, $drop = false ) {
 					if ( $file == '.' || $file == '..' )
 						continue;
 
-					if ( @is_dir( $dir . DIRECTORY_SEPARATOR . $file ) ) {
+					if ( @is_dir( $dir . DIRECTORY_SEPARATOR . $file ) )
 						$stack[] = $dir . DIRECTORY_SEPARATOR . $file;
-					} elseif ( @is_file( $dir . DIRECTORY_SEPARATOR . $file ) ) {
+					else if ( @is_file( $dir . DIRECTORY_SEPARATOR . $file ) )
 						@unlink( $dir . DIRECTORY_SEPARATOR . $file );
-					}
 				}
 				@closedir( $dh );
 			}
@@ -253,11 +252,10 @@ function update_option_new_admin_email( $old_value, $value ) {
 	);
 	update_option( 'adminhash', $new_admin_email );
 
-	$email_text = __( 'Howdy ###USERNAME###,
+	$email_text = __( 'Dear user,
 
 You recently requested to have the administration email address on
 your site changed.
-
 If this is correct, please click on the following link to change it:
 ###ADMIN_URL###
 
@@ -274,8 +272,7 @@ All at ###SITENAME###
 	 * Filter the email text sent when the site admin email is changed.
 	 *
 	 * The following strings have a special meaning and will get replaced dynamically:
-	 * ###USERNAME###  The current user's username.
-	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###ADMIN_URL### The link to click on to confirm the email change. Required otherwise this functunalty is will break.
 	 * ###EMAIL###     The new email.
 	 * ###SITENAME###  The name of the site.
 	 * ###SITEURL###   The URL to the site.
@@ -287,7 +284,6 @@ All at ###SITENAME###
 	 */
 	$content = apply_filters( 'new_admin_email_content', $email_text, $new_admin_email );
 
-	$content = str_replace( '###USERNAME###', $current_user->user_login, $content );
 	$content = str_replace( '###ADMIN_URL###', esc_url( admin_url( 'options.php?adminhash='.$hash ) ), $content );
 	$content = str_replace( '###EMAIL###', $value, $content );
 	$content = str_replace( '###SITENAME###', get_site_option( 'site_name' ), $content );
@@ -334,10 +330,9 @@ function send_confirmation_on_profile_email() {
 				);
 		update_option( $current_user->ID . '_new_email', $new_user_email );
 
-		$email_text = __( 'Howdy ###USERNAME###,
+		$email_text = __( 'Dear user,
 
 You recently requested to have the email address on your account changed.
-
 If this is correct, please click on the following link to change it:
 ###ADMIN_URL###
 
@@ -354,11 +349,10 @@ All at ###SITENAME###
 		 * Filter the email text sent when a user changes emails.
 		 *
 		 * The following strings have a special meaning and will get replaced dynamically:
-		 * ###USERNAME###  The current user's username.
-		 * ###ADMIN_URL### The link to click on to confirm the email change.
-		 * ###EMAIL###     The new email.
-		 * ###SITENAME###  The name of the site.
-		 * ###SITEURL###   The URL to the site.
+		 * ###ADMIN_URL### The link to click on to confirm the email change. Required otherwise this functunalty is will break.
+		 * ###EMAIL### The new email.
+		 * ###SITENAME### The name of the site.
+		 * ###SITEURL### The URL to the site.
 		 *
 		 * @since MU
 		 *
@@ -367,7 +361,6 @@ All at ###SITENAME###
 		 */
 		$content = apply_filters( 'new_user_email_content', $email_text, $new_user_email );
 
-		$content = str_replace( '###USERNAME###', $current_user->user_login, $content );
 		$content = str_replace( '###ADMIN_URL###', esc_url( admin_url( 'profile.php?newuseremail='.$hash ) ), $content );
 		$content = str_replace( '###EMAIL###', $_POST['email'], $content);
 		$content = str_replace( '###SITENAME###', get_site_option( 'site_name' ), $content );
@@ -593,10 +586,10 @@ function format_code_lang( $code = '' ) {
  *
  * @since 3.0.0
  *
- * @param object $term     The term.
- * @param string $taxonomy The taxonomy for $term. Should be 'category' or 'post_tag', as these are
- *                         the only taxonomies which are processed by this function; anything else
- *                         will be returned untouched.
+ * @param $term     The term.
+ * @param $taxonomy The taxonomy for $term. Should be 'category' or 'post_tag', as these are
+ *                  the only taxonomies which are processed by this function; anything else
+ *                  will be returned untouched.
  * @return object|array Returns `$term`, after filtering the 'slug' field with {@see sanitize_title()}
  *                      if $taxonomy is 'category' or 'post_tag'.
  */
@@ -631,7 +624,7 @@ function _access_denied_splash() {
 	$blog_name = get_bloginfo( 'name' );
 
 	if ( empty( $blogs ) )
-		wp_die( sprintf( __( 'You attempted to access the "%1$s" dashboard, but you do not currently have privileges on this site. If you believe you should be able to access the "%1$s" dashboard, please contact your network administrator.' ), $blog_name ), 403 );
+		wp_die( sprintf( __( 'You attempted to access the "%1$s" dashboard, but you do not currently have privileges on this site. If you believe you should be able to access the "%1$s" dashboard, please contact your network administrator.' ), $blog_name ) );
 
 	$output = '<p>' . sprintf( __( 'You attempted to access the "%1$s" dashboard, but you do not currently have privileges on this site. If you believe you should be able to access the "%1$s" dashboard, please contact your network administrator.' ), $blog_name ) . '</p>';
 	$output .= '<p>' . __( 'If you reached this screen by accident and meant to visit one of your own sites, here are some shortcuts to help you find your way.' ) . '</p>';
@@ -649,7 +642,7 @@ function _access_denied_splash() {
 
 	$output .= '</table>';
 
-	wp_die( $output, 403 );
+	wp_die( $output );
 }
 add_action( 'admin_page_access_denied', '_access_denied_splash', 99 );
 
@@ -962,7 +955,9 @@ function can_edit_network( $site_id ) {
 function _thickbox_path_admin_subfolder() {
 ?>
 <script type="text/javascript">
+//<![CDATA[
 var tb_pathToImage = "<?php echo includes_url( 'js/thickbox/loadingAnimation.gif', 'relative' ); ?>";
+//]]>
 </script>
 <?php
 }

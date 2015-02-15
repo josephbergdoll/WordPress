@@ -149,19 +149,20 @@ class WP_MS_Users_List_Table extends WP_List_Table {
 	public function display_rows() {
 		global $mode;
 
+		$alt = '';
 		$super_admins = get_super_admins();
 		foreach ( $this->items as $user ) {
-			$class = '';
+			$alt = ( 'alternate' == $alt ) ? '' : 'alternate';
 
 			$status_list = array( 'spam' => 'site-spammed', 'deleted' => 'site-deleted' );
 
 			foreach ( $status_list as $status => $col ) {
 				if ( $user->$status )
-					$class .= " $col";
+					$alt .= " $col";
 			}
 
 			?>
-			<tr class="<?php echo trim( $class ); ?>">
+			<tr class="<?php echo $alt; ?>">
 			<?php
 
 			list( $columns, $hidden ) = $this->get_column_info();

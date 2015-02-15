@@ -233,20 +233,18 @@ if ( $tab ) {
 				<img class="theme-screenshot" src="{{ data.screenshot_url }}" alt="" />
 
 				<div class="theme-details">
-					<# if ( data.rating ) { #>
-						<div class="rating rating-{{ Math.round( data.rating / 10 ) * 10 }}">
-							<span class="one"></span>
-							<span class="two"></span>
-							<span class="three"></span>
-							<span class="four"></span>
-							<span class="five"></span>
-							<small class="ratings">{{ data.num_ratings }}</small>
-						</div>
+					<div class="rating rating-{{ Math.round( data.rating / 10 ) * 10 }}">
+						<span class="one"></span>
+						<span class="two"></span>
+						<span class="three"></span>
+						<span class="four"></span>
+						<span class="five"></span>
+					<# if ( data.num_ratings ) { #>
+						<small class="ratings">{{ data.num_ratings }}</small>
 					<# } else { #>
-						<div class="rating">
-							<small class="ratings"><?php _e( 'This theme has not been rated yet.' ); ?></small>
-						</div>
+						<small class="ratings"><?php _e( 'No ratings.' ); ?></small>
 					<# } #>
+					</div>
 					<div class="theme-version"><?php printf( __( 'Version: %s' ), '{{ data.version }}' ); ?></div>
 					<div class="theme-description">{{{ data.description }}}</div>
 				</div>

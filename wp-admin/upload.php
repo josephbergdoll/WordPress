@@ -24,18 +24,8 @@ if ( 'grid' === $mode ) {
 	wp_enqueue_media();
 	wp_enqueue_script( 'media-grid' );
 	wp_enqueue_script( 'media' );
-
-	$vars = wp_edit_attachments_query_vars();
-	$ignore = array( 'mode', 'post_type', 'post_status', 'posts_per_page' );
-	foreach ( $vars as $key => $value ) {
-		if ( ! $value || in_array( $key, $ignore ) ) {
-			unset( $vars[ $key ] );
-		}
-	}
-
 	wp_localize_script( 'media-grid', '_wpMediaGridSettings', array(
 		'adminUrl' => parse_url( self_admin_url(), PHP_URL_PATH ),
-		'queryVars' => (object) $vars
 	) );
 
 	get_current_screen()->add_help_tab( array(
@@ -287,7 +277,7 @@ if ( !empty($message) ) { ?>
 <div id="message" class="updated"><p><?php echo $message; ?></p></div>
 <?php } ?>
 
-<form id="posts-filter" method="get">
+<form id="posts-filter" action="" method="get">
 
 <?php $wp_list_table->views(); ?>
 

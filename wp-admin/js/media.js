@@ -1,4 +1,4 @@
-/* global ajaxurl, attachMediaBoxL10n, _wpMediaGridSettings */
+/* global ajaxurl, attachMediaBoxL10n */
 
 var findPosts;
 ( function( $ ){
@@ -72,16 +72,13 @@ var findPosts;
 	};
 
 	$( document ).ready( function() {
-		var settings, $mediaGridWrap = $( '#wp-media-grid' );
+		var $mediaGridWrap = $( '#wp-media-grid' );
 
 		// Open up a manage media frame into the grid.
 		if ( $mediaGridWrap.length && window.wp && window.wp.media ) {
-			settings = _wpMediaGridSettings;
-
 			window.wp.media({
 				frame: 'manage',
-				container: $mediaGridWrap,
-				library: settings.queryVars
+				container: $mediaGridWrap
 			}).open();
 		}
 

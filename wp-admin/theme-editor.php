@@ -229,10 +229,12 @@ endif; // $error
 <br class="clear" />
 </div>
 <script type="text/javascript">
+/* <![CDATA[ */
 jQuery(document).ready(function($){
 	$('#template').submit(function(){ $('#scrollto').val( $('#newcontent').scrollTop() ); });
 	$('#newcontent').scrollTop( $('#scrollto').val() );
 });
+/* ]]> */
 </script>
 <?php
 break;

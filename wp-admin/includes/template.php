@@ -176,7 +176,7 @@ function wp_terms_checklist( $post_id = 0, $args = array() ) {
 
 	$r = wp_parse_args( $params, $defaults );
 
-	if ( empty( $r['walker'] ) || ! ( $r['walker'] instanceof Walker ) ) {
+	if ( empty( $r['walker'] ) || ! is_a( $r['walker'], 'Walker' ) ) {
 		$walker = new Walker_Category_Checklist;
 	} else {
 		$walker = $r['walker'];
@@ -250,7 +250,7 @@ function wp_terms_checklist( $post_id = 0, $args = array() ) {
  * @since 2.5.0
  *
  * @param string $taxonomy Taxonomy to retrieve terms from.
- * @param int $default Not used.
+ * @param int $default Unused.
  * @param int $number Number of terms to retrieve. Defaults to 10.
  * @param bool $echo Optionally output the list as well. Defaults to true.
  * @return array List of popular term IDs.
@@ -301,14 +301,11 @@ function wp_popular_terms_checklist( $taxonomy, $default = 0, $number = 10, $ech
 function wp_link_category_checklist( $link_id = 0 ) {
 	$default = 1;
 
-	$checked_categories = array();
-
 	if ( $link_id ) {
 		$checked_categories = wp_get_link_cats( $link_id );
 		// No selected categories, strange
-		if ( ! count( $checked_categories ) ) {
+		if ( ! count( $checked_categories ) )
 			$checked_categories[] = $default;
-		}
 	} else {
 		$checked_categories[] = $default;
 	}
@@ -411,8 +408,8 @@ function get_inline_data($post) {
  * @param string $mode
  * @param bool $table_row
  */
-function wp_comment_reply( $position = 1, $checkbox = false, $mode = 'single', $table_row = true ) {
-	global $wp_list_table;
+function wp_comment_reply($position = '1', $checkbox = false, $mode = 'single', $table_row = true) {
+
 	/**
 	 * Filter the in-line comment reply-to form output in the Comments
 	 * list table.
@@ -435,16 +432,14 @@ function wp_comment_reply( $position = 1, $checkbox = false, $mode = 'single', $
 		return;
 	}
 
-	if ( ! $wp_list_table ) {
-		if ( $mode == 'single' ) {
-			$wp_list_table = _get_list_table('WP_Post_Comments_List_Table');
-		} else {
-			$wp_list_table = _get_list_table('WP_Comments_List_Table');
-		}
+	if ( $mode == 'single' ) {
+		$wp_list_table = _get_list_table('WP_Post_Comments_List_Table');
+	} else {
+		$wp_list_table = _get_list_table('WP_Comments_List_Table');
 	}
 
 ?>
-<form method="get">
+<form method="get" action="">
 <?php if ( $table_row ) : ?>
 <table style="display:none;"><tbody id="com-reply"><tr id="replyrow" style="display:none;"><td colspan="<?php echo $wp_list_table->get_column_count(); ?>" class="colspanchange">
 <?php else : ?>
@@ -582,13 +577,17 @@ function _list_meta_row( $entry, &$count ) {
 	static $update_nonce = false;
 
 	if ( is_protected_meta( $entry['meta_key'], 'post' ) )
-		return '';
+		return;
 
 	if ( !$update_nonce )
 		$update_nonce = wp_create_nonce( 'add-meta' );
 
 	$r = '';
 	++ $count;
+	if ( $count % 2 )
+		$style = 'alternate';
+	else
+		$style = '';
 
 	if ( is_serialized( $entry['meta_value'] ) ) {
 		if ( is_serialized_string( $entry['meta_value'] ) ) {
@@ -597,7 +596,7 @@ function _list_meta_row( $entry, &$count ) {
 		} else {
 			// This is a serialized array/object so we should NOT display it.
 			--$count;
-			return '';
+			return;
 		}
 	}
 
@@ -607,7 +606,7 @@ function _list_meta_row( $entry, &$count ) {
 
 	$delete_nonce = wp_create_nonce( 'delete-meta_' . $entry['meta_id'] );
 
-	$r .= "\n\t<tr id='meta-{$entry['meta_id']}'>";
+	$r .= "\n\t<tr id='meta-{$entry['meta_id']}' class='$style'>";
 	$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='meta-{$entry['meta_id']}-key'>" . __( 'Key' ) . "</label><input name='meta[{$entry['meta_id']}][key]' id='meta-{$entry['meta_id']}-key' type='text' size='20' value='{$entry['meta_key']}' />";
 
 	$r .= "\n\t\t<div class='submit'>";
@@ -708,10 +707,10 @@ function meta_form( $post = null ) {
  *
  * @since 0.71
  *
- * @param int|bool $edit      Accepts 1|true for editing the date, 0|false for adding the date.
- * @param int|bool $for_post  Accepts 1|true for applying the date to a post, 0|false for a comment.
- * @param int      $tab_index The tabindex attribute to add. Default 0.
- * @param int|bool $multi     Optional. Whether the additional fields and buttons should be added.
+ * @param int $edit      Accepts 1|true for editing the date, 0|false for adding the date.
+ * @param int $for_post  Accepts 1|true for applying the date to a post, 0|false for a comment.
+ * @param int $tab_index The tabindex attribute to add. Default 0.
+ * @param int $multi     Optional. Whether the additional fields and buttons should be added.
  *                            Default 0|false.
  */
 function touch_time( $edit = 1, $for_post = 1, $tab_index = 0, $multi = 0 ) {
@@ -843,9 +842,9 @@ function parent_dropdown( $default = 0, $parent = 0, $level = 0 ) {
  *
  * @since 2.1.0
  *
- * @param string $selected Slug for the role that should be already selected.
+ * @param string $selected slug for the role that should be already selected
  */
-function wp_dropdown_roles( $selected = '' ) {
+function wp_dropdown_roles( $selected = false ) {
 	$p = '';
 	$r = '';
 
@@ -1527,12 +1526,12 @@ function _admin_search_query() {
  *
  * @since 2.7.0
  * @param string $title Title of the Iframe page.
- * @param bool $deprecated Not used.
+ * @param bool $limit_styles Limit styles to colour-related styles only (unless others are enqueued).
  *
  */
-function iframe_header( $title = '', $deprecated = false ) {
+function iframe_header( $title = '', $limit_styles = false ) {
 	show_admin_bar( false );
-	global $hook_suffix, $admin_body_class, $wp_locale;
+	global $hook_suffix, $current_user, $admin_body_class, $wp_locale;
 	$admin_body_class = preg_replace('/[^a-z0-9_-]+/i', '-', $hook_suffix);
 
 	$current_screen = get_current_screen();
@@ -1545,6 +1544,7 @@ function iframe_header( $title = '', $deprecated = false ) {
 wp_enqueue_style( 'colors' );
 ?>
 <script type="text/javascript">
+//<![CDATA[
 addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
 function tb_close(){var win=window.dialogArguments||opener||parent||top;win.tb_remove();}
 var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>',
@@ -1554,6 +1554,7 @@ var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>',
 	thousandsSeparator = '<?php echo addslashes( $wp_locale->number_format['thousands_sep'] ); ?>',
 	decimalPoint = '<?php echo addslashes( $wp_locale->number_format['decimal_point'] ); ?>',
 	isRtl = <?php echo (int) is_rtl(); ?>;
+//]]>
 </script>
 <?php
 /** This action is documented in wp-admin/admin-header.php */
@@ -1590,11 +1591,13 @@ $admin_body_classes = apply_filters( 'admin_body_class', '' );
 ?>
 <body<?php if ( isset($GLOBALS['body_id']) ) echo ' id="' . $GLOBALS['body_id'] . '"'; ?> class="wp-admin wp-core-ui no-js iframe <?php echo $admin_body_classes . ' ' . $admin_body_class; ?>">
 <script type="text/javascript">
+//<![CDATA[
 (function(){
 var c = document.body.className;
 c = c.replace(/no-js/, 'js');
 document.body.className = c;
 })();
+//]]>
 </script>
 <?php
 }
@@ -1721,6 +1724,7 @@ function _media_states( $post ) {
 function compression_test() {
 ?>
 	<script type="text/javascript">
+	/* <![CDATA[ */
 	var testCompression = {
 		get : function(test) {
 			var x;
@@ -1738,7 +1742,7 @@ function compression_test() {
 						h = x.getResponseHeader('Content-Encoding');
 						testCompression.check(r, h, test);
 					}
-				};
+				}
 
 				x.open('GET', ajaxurl + '?action=wp-compression-test&test='+test+'&'+(new Date()).getTime(), true);
 				x.send('');
@@ -1767,6 +1771,7 @@ function compression_test() {
 		}
 	};
 	testCompression.check();
+	/* ]]> */
 	</script>
 <?php
 }
@@ -1814,7 +1819,7 @@ function submit_button( $text = null, $type = 'primary', $name = 'submit', $wrap
  *                     Defaults to no other attributes. Other attributes can also be provided as a
  *                     string such as 'tabindex="1"', though the array format is typically cleaner.
  */
-function get_submit_button( $text = '', $type = 'primary large', $name = 'submit', $wrap = true, $other_attributes = '' ) {
+function get_submit_button( $text = null, $type = 'primary large', $name = 'submit', $wrap = true, $other_attributes = null ) {
 	if ( ! is_array( $type ) )
 		$type = explode( ' ', $type );
 
@@ -1844,7 +1849,7 @@ function get_submit_button( $text = '', $type = 'primary large', $name = 'submit
 		foreach ( $other_attributes as $attribute => $value ) {
 			$attributes .= $attribute . '="' . esc_attr( $value ) . '" '; // Trailing space is important
 		}
-	} elseif ( ! empty( $other_attributes ) ) { // Attributes provided as a string
+	} else if ( !empty( $other_attributes ) ) { // Attributes provided as a string
 		$attributes = $other_attributes;
 	}
 
@@ -1965,6 +1970,7 @@ final class WP_Internal_Pointers {
 
 		?>
 		<script type="text/javascript">
+		//<![CDATA[
 		(function($){
 			var options = <?php echo wp_json_encode( $args ); ?>, setup;
 
@@ -1990,6 +1996,7 @@ final class WP_Internal_Pointers {
 				$(document).ready( setup );
 
 		})( jQuery );
+		//]]>
 		</script>
 		<?php
 	}

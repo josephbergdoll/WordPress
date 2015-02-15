@@ -197,7 +197,7 @@ function get_the_author_posts() {
 	if ( ! $post ) {
 		return 0;
 	}
-	return count_user_posts( $post->post_author, $post->post_type );
+	return count_user_posts( $post->post_author );
 }
 
 /**
@@ -451,3 +451,4 @@ function is_multi_author() {
 function __clear_multi_author_cache() {
 	delete_transient( 'is_multi_author' );
 }
+add_action('transition_post_status', '__clear_multi_author_cache');

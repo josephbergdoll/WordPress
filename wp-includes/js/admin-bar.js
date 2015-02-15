@@ -91,9 +91,7 @@ if ( typeof(jQuery) != 'undefined' ) {
 			if ( e.which != 13 )
 				return;
 
-			var target = $(e.target),
-				wrap = target.closest('.ab-sub-wrapper'),
-				parentHasHover = target.parent().hasClass('hover');
+			var target = $(e.target), wrap = target.closest('ab-sub-wrapper');
 
 			e.stopPropagation();
 			e.preventDefault();
@@ -102,11 +100,7 @@ if ( typeof(jQuery) != 'undefined' ) {
 				wrap = $('#wpadminbar .quicklinks');
 
 			wrap.find('.menupop').removeClass('hover');
-
-			if ( ! parentHasHover ) {
-				target.parent().toggleClass('hover');
-			}
-
+			target.parent().toggleClass('hover');
 			target.siblings('.ab-sub-wrapper').find('.ab-item').each(refresh);
 		}).each(refresh);
 

@@ -320,7 +320,7 @@ function wp_read_image_metadata( $file ) {
 			elseif ( ! empty( $iptc['2#080'][0] ) ) // creator / legacy byline
 				$meta['credit'] = trim( $iptc['2#080'][0] );
 
-			if ( ! empty( $iptc['2#055'][0] ) && ! empty( $iptc['2#060'][0] ) ) // created date and time
+			if ( ! empty( $iptc['2#055'][0] ) and ! empty( $iptc['2#060'][0] ) ) // created date and time
 				$meta['created_timestamp'] = strtotime( $iptc['2#055'][0] . ' ' . $iptc['2#060'][0] );
 
 			if ( ! empty( $iptc['2#116'][0] ) ) // copyright
@@ -337,6 +337,10 @@ function wp_read_image_metadata( $file ) {
 	 */
 	if ( is_callable( 'exif_read_data' ) && in_array( $sourceImageType, apply_filters( 'wp_read_image_metadata_types', array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) ) ) ) {
 		$exif = @exif_read_data( $file );
+
+		if ( empty( $meta['title'] ) && ! empty( $exif['Title'] ) ) {
+			$meta['title'] = trim( $exif['Title'] );
+		}
 
 		if ( ! empty( $exif['ImageDescription'] ) ) {
 			mbstring_binary_safe_encoding();

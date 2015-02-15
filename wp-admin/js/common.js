@@ -171,7 +171,7 @@ $('.contextual-help-tabs').delegate('a', 'click', function(e) {
 });
 
 $(document).ready( function() {
-	var checks, first, last, checked, sliced, mobileEvent, transitionTimeout, focusedRowActions, $firstHeading,
+	var checks, first, last, checked, sliced, mobileEvent, transitionTimeout, focusedRowActions,
 		lastClicked = false,
 		pageInput = $('input.current-page'),
 		currentPage = pageInput.val(),
@@ -368,10 +368,9 @@ $(document).ready( function() {
 		});
 	}
 
-	// Move .notice, .updated and .error alert boxes. Don't move boxes designed to be inline.
-	$firstHeading = $( 'div.wrap h2:first' );
-	$firstHeading.nextAll( 'div.updated, div.error, div.notice' ).addClass( 'below-h2' );
-	$( 'div.updated, div.error, div.notice' ).not( '.below-h2, .inline' ).insertAfter( $firstHeading );
+	// Move .updated and .error alert boxes. Don't move boxes designed to be inline.
+	$('div.wrap h2:first').nextAll('div.updated, div.error').addClass('below-h2');
+	$('div.updated, div.error').not('.below-h2, .inline').insertAfter( $('div.wrap h2:first') );
 
 	// Init screen meta
 	screenMeta.init();
@@ -442,7 +441,7 @@ $(document).ready( function() {
 	});
 
 	// Show row actions on keyboard focus of its parent container element or any other elements contained within
-	$( 'td.post-title, td.title, td.comment, .tags td.column-name, .bookmarks td.column-name, td.blogname, td.username, .dashboard-comment-wrap' ).focusin(function(){
+	$( 'td.post-title, td.title, td.comment, .bookmarks td.column-name, td.blogname, td.username, .dashboard-comment-wrap' ).focusin(function(){
 		clearTimeout( transitionTimeout );
 		focusedRowActions = $(this).find( '.row-actions' );
 		focusedRowActions.addClass( 'visible' );

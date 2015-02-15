@@ -250,7 +250,7 @@
 
 		// Adds a selected widget to the sidebar
 		submit: function( widgetTpl ) {
-			var widgetId, widget, widgetFormControl;
+			var widgetId, widget;
 
 			if ( ! widgetTpl ) {
 				widgetTpl = this.selected;
@@ -268,10 +268,7 @@
 				return;
 			}
 
-			widgetFormControl = this.currentSidebarControl.addWidget( widget.get( 'id_base' ) );
-			if ( widgetFormControl ) {
-				widgetFormControl.focus();
-			}
+			this.currentSidebarControl.addWidget( widget.get( 'id_base' ) );
 
 			this.close();
 		},
@@ -624,8 +621,7 @@
 			 * Update available sidebars when their rendered state changes
 			 */
 			updateAvailableSidebars = function() {
-				var $sidebarItems = $moveWidgetArea.find( 'li' ), selfSidebarItem,
-					renderedSidebarCount = 0;
+				var $sidebarItems = $moveWidgetArea.find( 'li' ), selfSidebarItem;
 
 				selfSidebarItem = $sidebarItems.filter( function(){
 					return $( this ).data( 'id' ) === self.params.sidebar_id;
@@ -633,28 +629,18 @@
 
 				$sidebarItems.each( function() {
 					var li = $( this ),
-						sidebarId, sidebar, sidebarIsRendered;
+						sidebarId,
+						sidebar;
 
 					sidebarId = li.data( 'id' );
 					sidebar = api.Widgets.registeredSidebars.get( sidebarId );
-					sidebarIsRendered = sidebar.get( 'is_rendered' );
 
-					li.toggle( sidebarIsRendered );
+					li.toggle( sidebar.get( 'is_rendered' ) );
 
-					if ( sidebarIsRendered ) {
-						renderedSidebarCount += 1;
-					}
-
-					if ( li.hasClass( 'selected' ) && ! sidebarIsRendered ) {
+					if ( li.hasClass( 'selected' ) && ! sidebar.get( 'is_rendered' ) ) {
 						selectSidebarItem( selfSidebarItem );
 					}
 				} );
-
-				if ( renderedSidebarCount > 1 ) {
-					self.container.find( '.move-widget' ).show();
-				} else {
-					self.container.find( '.move-widget' ).hide();
-				}
 			};
 
 			updateAvailableSidebars();
@@ -698,11 +684,11 @@
 			/**
 			 * Handle selecting a sidebar to move to
 			 */
-			this.container.find( '.widget-area-select' ).on( 'click keypress', 'li', function( event ) {
+			this.container.find( '.widget-area-select' ).on( 'click keypress', 'li', function( e ) {
 				if ( event.type === 'keypress' && ( event.which !== 13 && event.which !== 32 ) ) {
 					return;
 				}
-				event.preventDefault();
+				e.preventDefault();
 				selectSidebarItem( $( this ) );
 			} );
 
@@ -1652,10 +1638,7 @@
 			});
 
 			if ( ! widgetControls.length ) {
-				this.container.find( '.reorder-toggle' ).hide();
 				return;
-			} else {
-				this.container.find( '.reorder-toggle' ).show();
 			}
 
 			$( widgetControls ).each( function () {
@@ -1847,14 +1830,18 @@
 
 			controlContainer.slideDown( function() {
 				if ( isExistingWidget ) {
+					widgetFormControl.expand();
 					widgetFormControl.updateWidget( {
 						instance: widgetFormControl.setting(),
 						complete: function( error ) {
 							if ( error ) {
 								throw error;
 							}
+							widgetFormControl.focus();
 						}
 					} );
+				} else {
+					widgetFormControl.focus();
 				}
 			} );
 

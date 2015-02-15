@@ -162,7 +162,7 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 			toolbar = editor.$( viewNode ).find( '.toolbar' ),
 			editorToolbar = tinymce.$( editor.editorContainer ).find( '.mce-toolbar-grp' )[0],
 			editorToolbarBottom = ( editorToolbar && editorToolbar.getBoundingClientRect().bottom ) || 0;
-
+		
 		if ( toolbar.length && editor.iframeElement ) {
 			// 48 = 43 for the toolbar + 5 buffer
 			delta = viewNode.getBoundingClientRect().top + editor.iframeElement.getBoundingClientRect().top - editorToolbarBottom - 48;
@@ -264,13 +264,9 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 		} else if ( y > lastRect.bottom && ( view = getView( last ) ) ) {
 			setViewCursor( false, view );
 			event.preventDefault();
-		} else if ( x < bodyRect.left || x > bodyRect.right ) {
+		} else {
 			tinymce.each( editor.dom.select( '.wpview-wrap' ), function( view ) {
 				var rect = view.getBoundingClientRect();
-
-				if ( y < rect.top ) {
-					return false;
-				}
 
 				if ( y >= rect.top && y <= rect.bottom ) {
 					if ( x < bodyRect.left ) {
@@ -280,8 +276,7 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 						setViewCursor( false, view );
 						event.preventDefault();
 					}
-
-					return false;
+					return;
 				}
 			});
 		}
@@ -335,13 +330,8 @@ tinymce.PluginManager.add( 'wpview', function( editor ) {
 
 				if ( ( event.type === 'touchend' || event.type === 'mousedown' ) && ! event.metaKey && ! event.ctrlKey ) {
 					if ( editor.dom.hasClass( event.target, 'edit' ) ) {
-
-						// In IE need to transfer focus from the non-editable view back to the editor.
-						if ( Env.ie ) {
-							editor.focus();
-						}
-
 						wp.mce.views.edit( view );
+						editor.focus();
 						return false;
 					} else if ( editor.dom.hasClass( event.target, 'remove' ) ) {
 						removeView( view );
