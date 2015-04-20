@@ -1457,11 +1457,42 @@ function acf_form( $args = array() ) {
 	<div class="acf-form-submit">
 	
 		<input type="submit" class="button button-primary button-large" value="<?php echo $args['submit_value']; ?>" />
+		<span class="acf-loading" style="display: none;"></span>
 		
 	</div>
 	<!-- / Submit -->
 	
 	</form>
+	<script type="text/javascript">
+	(function($) {
+		
+		// vars
+		var $spinner = $('#<?php echo $args['form_attributes']['id']; ?> .acf-form-submit .acf-loading');
+		
+		
+		// show spinner on submit
+		$(document).on('submit', '#<?php echo $args['form_attributes']['id']; ?>', function(){
+			
+			// show spinner
+			$spinner.css('display', 'inline-block');
+			
+		});
+		
+		
+		// hide spinner after validation
+		acf.add_filter('validation_complete', function( json, $form ){
+			
+			// hide spinner
+			$spinner.css('display', 'none');
+			
+			
+			// return
+			return json;
+					
+		});
+		
+	})(jQuery);	
+	</script>
 	<?php endif;
 }
 

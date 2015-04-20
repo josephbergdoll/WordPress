@@ -2,8 +2,8 @@
 /*
 Plugin Name: Advanced Custom Fields Pro
 Plugin URI: http://www.advancedcustomfields.com/
-Description: Fully customise WordPress edit screens with powerful fields. Boasting a professional interface and a powerful API, it’s a must have for any web developer working with WordPress. Field types include: Wysiwyg, text, textarea, image, file, select, checkbox, page link, post object, date picker, color picker, repeater, flexible content, gallery and more!
-Version: 5.1.7.1
+Description: Customise WordPress with powerful, professional and intuitive fields
+Version: 5.2.2
 Author: elliot condon
 Author URI: http://www.elliotcondon.com/
 Copyright: Elliot Condon
@@ -61,7 +61,7 @@ class acf {
 			
 			// basic
 			'name'				=> __('Advanced Custom Fields', 'acf'),
-			'version'			=> '5.1.7.1',
+			'version'			=> '5.2.2',
 						
 			// urls
 			'basename'			=> plugin_basename( __FILE__ ),
@@ -70,13 +70,15 @@ class acf {
 			
 			// options
 			'show_admin'		=> true,
+			'show_updates'		=> true,
 			'stripslashes'		=> false,
 			'local'				=> true,
 			'json'				=> true,
 			'save_json'			=> '',
 			'load_json'			=> array(),
 			'default_language'	=> '',
-			'current_language'	=> ''
+			'current_language'	=> '',
+			'capability'		=> 'manage_options'
 		);
 		
 		
@@ -102,6 +104,7 @@ class acf {
 		acf_include('core/json.php');
 		acf_include('core/local.php');
 		acf_include('core/location.php');
+		acf_include('core/media.php');
 		acf_include('core/revisions.php');
 		acf_include('core/compatibility.php');
 		acf_include('core/third_party.php');
@@ -239,10 +242,14 @@ class acf {
 		$this->complete();
 		
 		
+		// vars
+		$cap = acf_get_setting('capability');
+		
+		
 		// Create post type 'acf-field-group'
 		register_post_type( 'acf-field-group', array(
 			'labels'			=> array(
-			    'name'					=> __( 'Field&nbsp;Groups', 'acf' ),
+			    'name'					=> __( 'Field Groups', 'acf' ),
 				'singular_name'			=> __( 'Field Group', 'acf' ),
 			    'add_new'				=> __( 'Add New' , 'acf' ),
 			    'add_new_item'			=> __( 'Add New Field Group' , 'acf' ),
@@ -256,11 +263,17 @@ class acf {
 			'public'			=> false,
 			'show_ui'			=> true,
 			'_builtin'			=> false,
-			'capability_type'	=> 'page',
+			'capability_type'	=> 'post',
+			'capabilities'		=> array(
+				'edit_post'			=> $cap,
+				'delete_post'		=> $cap,
+				'edit_posts'		=> $cap,
+				'delete_posts'		=> $cap,
+			),
 			'hierarchical'		=> true,
 			'rewrite'			=> false,
 			'query_var'			=> false,
-			'supports' 			=> array( 'title' ),
+			'supports' 			=> array('title'),
 			'show_in_menu'		=> false,
 		));
 		
@@ -282,11 +295,17 @@ class acf {
 			'public'			=> false,
 			'show_ui'			=> false,
 			'_builtin'			=> false,
-			'capability_type'	=> 'page',
+			'capability_type'	=> 'post',
+			'capabilities'		=> array(
+				'edit_post'			=> $cap,
+				'delete_post'		=> $cap,
+				'edit_posts'		=> $cap,
+				'delete_posts'		=> $cap,
+			),
 			'hierarchical'		=> true,
 			'rewrite'			=> false,
 			'query_var'			=> false,
-			'supports' 			=> array( 'title' ),
+			'supports' 			=> array('title'),
 			'show_in_menu'		=> false,
 		));
 		
@@ -300,21 +319,20 @@ class acf {
 			
 			array(
 				'handle'	=> 'select2',
-				'src'		=> acf_get_dir( "inc/select2/select2{$min}.js" ),
-				'deps'		=> false,
+				'src'		=> acf_get_dir( "assets/inc/select2/select2{$min}.js" ),
+				'deps'		=> false
 			),
 			
 			array(
 				'handle'	=> 'acf-input',
-				'src'		=> acf_get_dir( "js/input{$min}.js" ),
-				'deps'		=> array('jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-sortable', 'jquery-ui-resizable', 'jquery-ui-datepicker', 'wp-color-picker', 'thickbox', 'media-upload', 'select2', 'underscore'
-				),
+				'src'		=> acf_get_dir( "assets/js/acf-input{$min}.js" ),
+				'deps'		=> array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-resizable', 'jquery-ui-datepicker', 'wp-color-picker', 'select2')
 			),
 			
 			array(
 				'handle'	=> 'acf-field-group',
-				'src'		=> acf_get_dir( "js/field-group{$min}.js"),
-				'deps'		=> array('acf-input'),
+				'src'		=> acf_get_dir( "assets/js/acf-field-group{$min}.js"),
+				'deps'		=> array('acf-input')
 			)
 			
 		);
@@ -331,33 +349,34 @@ class acf {
 			
 			array(
 				'handle'	=> 'select2',
-				'src'		=> acf_get_dir( 'inc/select2/select2.css' ),
-				'deps'		=> false,
-			),
-			
-			array(
-				'handle'	=> 'acf-global',
-				'src'		=> acf_get_dir( 'css/global.css' ),
-				'deps'		=> false,
+				'src'		=> acf_get_dir('assets/inc/select2/select2.css'),
+				'deps'		=> false
 			),
 			
 			array(
 				'handle'	=> 'acf-datepicker',
-				'src'		=> acf_get_dir( 'inc/datepicker/jquery-ui-1.10.4.custom.min.css' ),
-				'deps'		=> false,
+				'src'		=> acf_get_dir('assets/inc/datepicker/jquery-ui-1.10.4.custom.min.css'),
+				'deps'		=> false
+			),
+			
+			array(
+				'handle'	=> 'acf-global',
+				'src'		=> acf_get_dir('assets/css/acf-global.css'),
+				'deps'		=> false
 			),
 			
 			array(
 				'handle'	=> 'acf-input',
-				'src'		=> acf_get_dir( 'css/input.css' ),
-				'deps'		=> array( 'thickbox', 'wp-color-picker', 'select2', 'acf-global', 'acf-datepicker')
+				'src'		=> acf_get_dir('assets/css/acf-input.css'),
+				'deps'		=> array('acf-global', 'wp-color-picker', 'select2', 'acf-datepicker')
 			),
 			
 			array(
 				'handle'	=> 'acf-field-group',
-				'src'		=> acf_get_dir( 'css/field-group.css' ),
-				'deps'		=> array('acf-input'),
+				'src'		=> acf_get_dir('assets/css/acf-field-group.css'),
+				'deps'		=> array('acf-input')
 			)
+			
 		);		
 		
 		foreach( $styles as $style ) {
